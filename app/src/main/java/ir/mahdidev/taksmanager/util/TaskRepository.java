@@ -35,7 +35,7 @@ public class TaskRepository {
         contentValues.put(Const.DB.TABLE_USER_REGISTER_DATE , date.toString());
 
        isInsertToDb = G.DB.insert(Const.DB.DB_TABLE_USER , null , contentValues) > 0;
-       G.DB.close();
+
         return isInsertToDb;
     }
 
@@ -53,6 +53,8 @@ public class TaskRepository {
             cursor.close();
         }        return false ;
     }
+    //Todo: fix cursor problem
+
     public UserModel signIn(String userName , String password){
         String dbUsername;
         String dbPassword;
@@ -131,14 +133,15 @@ public class TaskRepository {
         return taskList ;
     }
 
+    //Todo: Delete this test method
     public void insertTestData(){
         for (int i = 1 ; i<15 ; i++){
             ContentValues insertValues = new ContentValues();
             insertValues.put("id", i );
-            insertValues.put("user_id", 1);
+            insertValues.put("user_id", 2);
             insertValues.put("title", "Test" + i);
             insertValues.put("description", "04/06/2011");
-            insertValues.put("status", "TODO");
+            insertValues.put("status", "DOING");
             G.DB.insert("task", null, insertValues);
         }
     }

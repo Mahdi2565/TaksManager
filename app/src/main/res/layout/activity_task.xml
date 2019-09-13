@@ -10,20 +10,36 @@
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:id="@+id/toolbar"
         android:background="@color/colorBlue"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/title_toolbar"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello"
-            android:textSize="20dp"/>
+            <ImageView
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:id="@+id/log_out"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:padding="16sp"
+                app:srcCompat="@drawable/ic_logout"
+                android:layout_alignParentRight="true"
+                tools:targetApi="lollipop" />
+            <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/title_toolbar"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hello"
+                android:textSize="20dp"/>
+
+        </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
 

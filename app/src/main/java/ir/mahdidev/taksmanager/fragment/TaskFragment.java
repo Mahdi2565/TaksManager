@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ir.mahdidev.taksmanager.R;
+import ir.mahdidev.taksmanager.adapter.TaskRecyclerViewAdapter;
 import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
@@ -30,6 +32,8 @@ public class TaskFragment extends Fragment {
     private int userId;
     private ArrayList<TaskModel> taskList ;
     private TaskRepository repository;
+    private RecyclerView taskFragmentRecyclerView;
+    private TaskRecyclerViewAdapter recyclerViewAdapter;
     public TaskFragment() {
     }
 
@@ -45,12 +49,16 @@ public class TaskFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDataFromBundle();
+        readDatabase();
+    }
+
+    private void getDataFromBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             status = bundle.getString(Const.STATUS_BUNDLE_KEY);
             userId = bundle.getInt(Const.USER_ID_BUNDLE_KEY);
         }
-        readDatabase();
     }
 
     private void readDatabase() {
@@ -68,5 +76,18 @@ public class TaskFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initViews(view);
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
+        recyclerViewAdapter = new TaskRecyclerViewAdapter(taskList , getActivity());
+        taskFragmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        taskFragmentRecyclerView.setAdapter(recyclerViewAdapter);
+    }
+
+
+    private void initViews(View view) {
+        taskFragmentRecyclerView = view.findViewById(R.id.task_recyclerView);
     }
 }
