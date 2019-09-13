@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 import ir.mahdidev.taksmanager.R;
@@ -36,6 +37,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar toolbar;
     private TaskRepository repository = TaskRepository.getInstance();
     private ImageView logOut;
+    private ExtendedFloatingActionButton fab;
 
 
     @Override
@@ -78,6 +80,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         viewPager    = findViewById(R.id.view_pager);
         toolbar = findViewById(R.id.toolbar);
         logOut  = findViewById(R.id.log_out);
+        fab     = findViewById(R.id.fab);
         logOut.setOnClickListener(this);
     }
 
@@ -96,6 +99,8 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = MainActivity.newIntent(TaskActivity.this);
         startActivity(intent);
         finish();
+    }
+    private void initFab(){
     }
 
     @Override
