@@ -46,5 +46,6 @@ public class Const {
     }
     public static final String USER_MODEL_LOGGED_IN_INTENT_KEY = "ir.mahdidev.taksmanager.usermodel";
     public static final String STATUS_BUNDLE_KEY = "ir.mahdidev.taksmanager.status.bundle.key";
+    public static final String USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.userid";
 
 }

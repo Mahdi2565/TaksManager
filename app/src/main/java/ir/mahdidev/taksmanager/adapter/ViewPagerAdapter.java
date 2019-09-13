@@ -7,16 +7,19 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 
 import ir.mahdidev.taksmanager.fragment.TaskFragment;
+import ir.mahdidev.taksmanager.model.UserModel;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
     private String[] status = {"TODO" , "DOING" , "DONE"};
-    public ViewPagerAdapter(FragmentManager fm ) {
+    private int userId;
+    public ViewPagerAdapter(FragmentManager fm , int userId) {
         super(fm);
+        this.userId = userId;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return TaskFragment.newInstance(status[position]);
+        return TaskFragment.newInstance(status[position] , userId);
     }
 
     @Override

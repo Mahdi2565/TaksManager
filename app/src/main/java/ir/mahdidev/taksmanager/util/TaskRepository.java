@@ -7,6 +7,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.model.UserModel;
 
 public class TaskRepository {
@@ -48,8 +49,9 @@ public class TaskRepository {
                 return true;
             }
         }
-        cursor.close();
-        return false ;
+        if (cursor != null) {
+            cursor.close();
+        }        return false ;
     }
     public UserModel signIn(String userName , String password){
         String dbUsername;
@@ -65,7 +67,10 @@ public class TaskRepository {
                return userModel ;
             }
         }
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
+
         return null ;
     }
 
@@ -89,8 +94,9 @@ public class TaskRepository {
                 return userModel;
             }
         }
-        cursor.close();
-        return null;
+        if (cursor != null) {
+            cursor.close();
+        }        return null;
     }
 
     private void setUserModel(UserModel userModel , Cursor cursor){
@@ -102,6 +108,39 @@ public class TaskRepository {
         userModel.setIsLoggedIn(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_LOGGED_IN)));
         userModel.setIsAdmin(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_ADMIN)));
         userModel.setRegisterDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_REGISTER_DATE)));
+    }
+
+    public ArrayList<TaskModel> readTask (String status , int userId){
+        ArrayList<TaskModel> taskList = new ArrayList<>();
+        Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_TASK + " " +
+                "WHERE " + Const.DB.TABLE_TASK_STATUS + " = " +"\"" + status + "\"" +" AND " +
+                Const.DB.TABLE_TASK_USER_ID + " = " + userId, null);
+        while (cursor.moveToNext()){
+            TaskModel taskModel = new TaskModel();
+            taskModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_ID)));
+            taskModel.setUserId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_USER_ID)));
+            taskModel.setTitle(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TITLE)));
+            taskModel.setDescription(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DESCRIPTION)));
+            taskModel.setStatus(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_STATUS)));
+
+            taskList.add(taskModel);
+        }
+        if (cursor != null){
+            cursor.close();
+        }
+        return taskList ;
+    }
+
+    public void insertTestData(){
+        for (int i = 1 ; i<15 ; i++){
+            ContentValues insertValues = new ContentValues();
+            insertValues.put("id", i );
+            insertValues.put("user_id", 1);
+            insertValues.put("title", "Test" + i);
+            insertValues.put("description", "04/06/2011");
+            insertValues.put("status", "TODO");
+            G.DB.insert("task", null, insertValues);
+        }
     }
 
 }

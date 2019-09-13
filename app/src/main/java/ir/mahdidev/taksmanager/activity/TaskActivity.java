@@ -21,6 +21,7 @@ import ir.mahdidev.taksmanager.adapter.ViewPagerAdapter;
 import ir.mahdidev.taksmanager.fragment.TaskFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
+import ir.mahdidev.taksmanager.util.TaskRepository;
 
 public class TaskActivity extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class TaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+        TaskRepository repository = TaskRepository.getInstance();
+        repository.insertTestData();
         hideStatusBar();
         getDataFromLogin();
         initViews();
@@ -56,7 +59,7 @@ public class TaskActivity extends AppCompatActivity {
     private void initViewPagerAndTablayout() {
         String titleToolbarTxt = getResources().getString(R.string.title_toolbar)+ " " + userModel.getUserName();
         titleToolbar.setText(titleToolbarTxt);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager() , userModel.getId());
         viewPager.setAdapter(viewPagerAdapter);
         tableLayout.setupWithViewPager(viewPager);
     }

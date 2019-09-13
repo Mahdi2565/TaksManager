@@ -85,7 +85,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.login_btn_login :{
-                UserModel userModel = new UserModel();
+                UserModel userModel ;
                 String userName = userNameEdt.getText().toString();
                 String password = passwordEdt.getText().toString();
                 if (userName.isEmpty() && password.isEmpty()){
