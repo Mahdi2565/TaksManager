@@ -1,6 +1,7 @@
 package ir.mahdidev.taksmanager.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -84,6 +85,16 @@ public class TaskFragment extends Fragment {
         recyclerViewAdapter = new TaskRecyclerViewAdapter(taskList , getActivity());
         taskFragmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         taskFragmentRecyclerView.setAdapter(recyclerViewAdapter);
+        taskFragmentRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!recyclerView.canScrollVertically(1)) {
+                //TODO: pass arrived bottom to activity for hide fab
+                }else {
+                }
+            }
+        });
     }
 
 

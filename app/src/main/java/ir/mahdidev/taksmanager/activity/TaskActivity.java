@@ -18,11 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.tabs.TabLayout;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.adapter.ViewPagerAdapter;
+import ir.mahdidev.taksmanager.fragment.TaskFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.TaskRepository;
@@ -37,7 +39,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar toolbar;
     private TaskRepository repository = TaskRepository.getInstance();
     private ImageView logOut;
-    private ExtendedFloatingActionButton fab;
+    private FloatingActionMenu fabMenu;
 
 
     @Override
@@ -51,6 +53,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         getDataFromLogin();
         initViews();
         initViewPagerAndTablayout();
+        initFab();
     }
     private void initToolbar() {
         setSupportActionBar(toolbar);
@@ -80,7 +83,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         viewPager    = findViewById(R.id.view_pager);
         toolbar = findViewById(R.id.toolbar);
         logOut  = findViewById(R.id.log_out);
-        fab     = findViewById(R.id.fab);
+        fabMenu     = findViewById(R.id.fab_menu);
         logOut.setOnClickListener(this);
     }
 
@@ -101,6 +104,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         finish();
     }
     private void initFab(){
+
     }
 
     @Override
