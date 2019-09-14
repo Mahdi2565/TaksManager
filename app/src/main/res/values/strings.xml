@@ -11,4 +11,13 @@
     <string name="admin_check_box">Admin ?</string>
     <string name="title_toolbar">Hello</string>
     <string name="log_out_menu">Log out</string>
+    <string name="title_edt">Title</string>
+    <string name="description_edt">Description</string>
+    <string name="todo_chips">TODO</string>
+    <string name="doing_chips">DOING</string>
+    <string name="done_chips">DONE</string>
+    <string name="save_btn">Save</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="delete_btn">Delete</string>
+    <string name="edit_btn">Edit</string>
 </resources>

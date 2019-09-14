@@ -24,6 +24,8 @@ public class Const {
         public static final String TABLE_TASK_TITLE = "title";
         public static final String TABLE_TASK_DESCRIPTION = "description";
         public static final String TABLE_TASK_STATUS = "status";
+        public static final String TABLE_TASK_DATE   = "date"  ;
+        public static final String TABLE_TASK_TIME   = "time"  ;
 
         public static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + Const.DB.DB_TABLE_USER
                 + " ( " + Const.DB.TABLE_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " +
@@ -41,11 +43,27 @@ public class Const {
                 Const.DB.TABLE_TASK_USER_ID + " INTEGER NOT NULL , " +
                 Const.DB.TABLE_TASK_TITLE + " TEXT , "+
                 Const.DB.TABLE_TASK_DESCRIPTION + " TEXT , " +
-                Const.DB.TABLE_TASK_STATUS + " TEXT NOT NULL ) "
+                Const.DB.TABLE_TASK_STATUS + " TEXT NOT NULL , "
+                + DB.TABLE_TASK_DATE + " TEXT NOT NULL , " +
+                DB.TABLE_TASK_TIME + " TEXT NOT NULL ) "
                 ;
     }
     public static final String USER_MODEL_LOGGED_IN_INTENT_KEY = "ir.mahdidev.taksmanager.usermodel";
     public static final String STATUS_BUNDLE_KEY = "ir.mahdidev.taksmanager.status.bundle.key";
     public static final String USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.userid";
+    public static final String MODE_TASK_BUNDLE_KEY = "ir.mahdidev.taksmanager.mode.task";
+    public static final String  EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.task.id.bundle.key";
+    public static final String  EDIT_FRAGMENT_USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.edit.fragment.user.id.bundle.key";
+    public static final String  ADD_FRAGMENT_USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.add.fragment.user.id.bundle.key";
+    public static final String  TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.task.id.dialog.task.fragment.bundle.key";
+    public static final String  TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.user.id.dialog.task.fragment.bundle.key";
+    public static final String  EDIT_DIALOG_FRAGMENT_TAG = "ir.mahdidev.taksmanager.edit.dialog.fragment.tag";
+    public static final String  ADD_DIALOG_FRAGMENT_TAG = "ir.mahdidev.taksmanager.add.dialog.fragment.tag";
+    public static final String  ADD_FRAGMENT_TAG = "ir.mahdidev.taksmanager.add.fragment.tag";
+    public static final String  EDIT_FRAGMENT_TAG = "ir.mahdidev.taksmanager.edit.fragment.tag";
+    public static final int Add_TASK_MODE = 1;
+    public static final int EDIT_TASK_MODE = 0;
+    public static final int TASK_DIALOG_DEFAULT_TASK_ID = 0;
+    public static final int TASK_DIALOG_DEFAULT_USER_ID = 0;
 
 }

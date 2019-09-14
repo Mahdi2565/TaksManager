@@ -6,16 +6,36 @@ public class TaskModel {
     private String title       ;
     private String description ;
     private String status      ;
+    private String date        ;
+    private String time        ;
 
     public TaskModel() {
     }
 
-    public TaskModel(int id, int userId, String title, String description, String status) {
+    public TaskModel(int id, int userId, String title, String description, String status , String date , String time) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.status = status;
+        this.date   = date  ;
+        this.time   = time  ;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public int getId() {

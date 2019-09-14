@@ -1,6 +1,5 @@
 package ir.mahdidev.taksmanager.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -9,27 +8,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.tabs.TabLayout;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.adapter.ViewPagerAdapter;
-import ir.mahdidev.taksmanager.fragment.TaskFragment;
+import ir.mahdidev.taksmanager.fragment.TaskDialogFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
-public class TaskActivity extends AppCompatActivity implements View.OnClickListener {
+public class TaskActivity extends AppCompatActivity implements View.OnClickListener , TaskDialogFragment.TaskDialogInterface {
 
     private UserModel userModel;
     private TextView titleToolbar;
@@ -39,7 +35,10 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar toolbar;
     private TaskRepository repository = TaskRepository.getInstance();
     private ImageView logOut;
-    private FloatingActionMenu fabMenu;
+    private com.github.clans.fab.FloatingActionButton addTask ;
+    private com.github.clans.fab.FloatingActionButton removeTasks ;
+    private com.github.clans.fab.FloatingActionButton editProfile ;
+    private FloatingActionMenu fab_menu;
 
 
     @Override
@@ -47,8 +46,6 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
         initToolbar();
-        TaskRepository repository = TaskRepository.getInstance();
-        repository.insertTestData();
         changeStatusBarColor();
         getDataFromLogin();
         initViews();
@@ -74,6 +71,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         titleToolbar.setText(titleToolbarTxt);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager() , userModel.getId());
         viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(1);
         tableLayout.setupWithViewPager(viewPager);
     }
 
@@ -83,7 +81,10 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         viewPager    = findViewById(R.id.view_pager);
         toolbar = findViewById(R.id.toolbar);
         logOut  = findViewById(R.id.log_out);
-        fabMenu     = findViewById(R.id.fab_menu);
+        addTask     = findViewById(R.id.add_task);
+        removeTasks = findViewById(R.id.remove_tasks);
+        editProfile = findViewById(R.id.edit_profile);
+        fab_menu    = findViewById(R.id.fab_menu);
         logOut.setOnClickListener(this);
     }
 
@@ -104,7 +105,9 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         finish();
     }
     private void initFab(){
-
+    addTask.setOnClickListener(this);
+    removeTasks.setOnClickListener(this);
+    editProfile.setOnClickListener(this);
     }
 
     @Override
@@ -114,6 +117,35 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
                 logoutFunction();
                 break;
             }
+            case R.id.add_task :{
+                TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.Add_TASK_MODE , Const.TASK_DIALOG_DEFAULT_TASK_ID
+                , userModel.getId());
+                dialogFragment.show(getSupportFragmentManager() , Const.ADD_DIALOG_FRAGMENT_TAG);
+                fab_menu.close(true);
+                break;
+            }
+            case R.id.remove_tasks : {
+
+                fab_menu.close(true);
+                break;
+            }
+            case R.id.edit_profile : {
+
+                fab_menu.close(true);
+                break;
+            }
         }
+    }
+
+    @Override
+    public void onSavedClicked(boolean isclicked) {
+
+    }
+    public interface TaskActivityInterface{
+        void onClickedSave(boolean isClicked);
+    }
+    public TaskActivityInterface taskActivityInterface;
+    public void setTaskActivityInterface (TaskActivityInterface taskActivityInterface){
+        this.taskActivityInterface = taskActivityInterface ;
     }
 }

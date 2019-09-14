@@ -4,8 +4,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.model.UserModel;
@@ -124,7 +128,8 @@ public class TaskRepository {
             taskModel.setTitle(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TITLE)));
             taskModel.setDescription(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DESCRIPTION)));
             taskModel.setStatus(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_STATUS)));
-
+            taskModel.setDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DATE)));
+            taskModel.setTime(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TIME)));
             taskList.add(taskModel);
         }
         if (cursor != null){
@@ -132,18 +137,37 @@ public class TaskRepository {
         }
         return taskList ;
     }
+    public boolean insertTask( int userId , String title , String description ,
+                              String status , String date , String time){
+        ContentValues contentValues = new ContentValues();
+        boolean isInsert ;
 
-    //Todo: Delete this test method
-    public void insertTestData(){
+        contentValues.put(Const.DB.TABLE_TASK_USER_ID , userId);
+        contentValues.put(Const.DB.TABLE_TASK_TITLE , title);
+        contentValues.put(Const.DB.TABLE_TASK_DESCRIPTION , description);
+        contentValues.put(Const.DB.TABLE_TASK_STATUS , status);
+        contentValues.put(Const.DB.TABLE_TASK_DATE , date);
+        contentValues.put(Const.DB.TABLE_TASK_TIME , time);
+       isInsert =  G.DB.insert(Const.DB.DB_TABLE_TASK , null , contentValues) > 0;
+
+       return isInsert;
+    }
+   /* public void insertTestData(){
         for (int i = 1 ; i<15 ; i++){
             ContentValues insertValues = new ContentValues();
-            insertValues.put("id", i );
-            insertValues.put("user_id", 2);
+            DateFormat date = new SimpleDateFormat("MMM dd yyyy" , Locale.US);
+            String dateFormatted = date.format(Calendar.getInstance().getTime());
+            DateFormat time = new SimpleDateFormat("hh:mm a" , Locale.US);
+            String timeFormatted = time.format(Calendar.getInstance().getTime());
+            insertValues.put("user_id", 1);
             insertValues.put("title", "Test" + i);
             insertValues.put("description", "04/06/2011");
             insertValues.put("status", "DOING");
+            insertValues.put("date" , dateFormatted);
+            insertValues.put("time" , timeFormatted);
             G.DB.insert("task", null, insertValues);
         }
     }
+*/
 
 }

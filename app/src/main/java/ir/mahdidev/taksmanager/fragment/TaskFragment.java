@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ir.mahdidev.taksmanager.R;
+import ir.mahdidev.taksmanager.activity.TaskActivity;
 import ir.mahdidev.taksmanager.adapter.TaskRecyclerViewAdapter;
 import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.model.UserModel;
@@ -27,12 +29,12 @@ import ir.mahdidev.taksmanager.util.TaskRepository;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TaskFragment extends Fragment {
+public class TaskFragment extends Fragment implements TaskActivity.TaskActivityInterface {
 
     private String status;
     private int userId;
     private ArrayList<TaskModel> taskList ;
-    private TaskRepository repository;
+    private TaskRepository repository = TaskRepository.getInstance();
     private RecyclerView taskFragmentRecyclerView;
     private TaskRecyclerViewAdapter recyclerViewAdapter;
     public TaskFragment() {
@@ -52,6 +54,7 @@ public class TaskFragment extends Fragment {
         super.onCreate(savedInstanceState);
         getDataFromBundle();
         readDatabase();
+
     }
 
     private void getDataFromBundle() {
@@ -64,7 +67,6 @@ public class TaskFragment extends Fragment {
 
     private void readDatabase() {
         taskList = new ArrayList<>();
-        repository = TaskRepository.getInstance();
         taskList = repository.readTask(status , userId);
     }
 
@@ -95,10 +97,23 @@ public class TaskFragment extends Fragment {
                 }
             }
         });
+        recyclerViewAdapter.setTaskRecyclerViewInterface(new TaskRecyclerViewAdapter.TaskRecyclerViewInterface() {
+            @Override
+            public void onReceive(int taskId , int UserId) {
+                TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.EDIT_TASK_MODE , taskId , userId);
+                dialogFragment.show(getChildFragmentManager() , Const.EDIT_DIALOG_FRAGMENT_TAG);
+            }
+        });
     }
 
 
     private void initViews(View view) {
         taskFragmentRecyclerView = view.findViewById(R.id.task_recyclerView);
+    }
+
+    @Override
+    public void onClickedSave(boolean isClicked) {
+        Log.e("TAG4" , "is clicked form destination" );
+
     }
 }

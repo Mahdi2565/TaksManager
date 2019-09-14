@@ -42,15 +42,32 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titleTask;
+        private TextView dateTask ;
         private TextView firstCharacterTitle;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTask = itemView.findViewById(R.id.title_task);
+            dateTask = itemView.findViewById(R.id.date_task);
             firstCharacterTitle = itemView.findViewById(R.id.first_character_title);
         }
-        public void onBind(int position){
+        public void onBind(final int position){
+            String time = taskList.get(position).getDate() + " " + taskList.get(position).getTime();
             titleTask.setText(taskList.get(position).getTitle());
+            dateTask.setText(time);
             firstCharacterTitle.setText(taskList.get(position).getTitle().substring(0 , 1));
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    taskRecyclerViewInterface.onReceive(taskList.get(position).getId() , taskList.get(position).getUserId());
+                }
+            });
         }
+    }
+    public TaskRecyclerViewInterface taskRecyclerViewInterface;
+    public interface TaskRecyclerViewInterface{
+        void onReceive(int taskId , int userId);
+    }
+    public void setTaskRecyclerViewInterface (TaskRecyclerViewInterface taskRecyclerViewInterface){
+        this.taskRecyclerViewInterface = taskRecyclerViewInterface;
     }
 }
