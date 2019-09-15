@@ -119,20 +119,25 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/delete_btn"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    android:text="@string/delete_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/edit_btn"
                     android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:text="@string/edit_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:text="@string/delete_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/save_btn"
+                    android:visibility="gone"
                     android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:text="@string/save_btn"

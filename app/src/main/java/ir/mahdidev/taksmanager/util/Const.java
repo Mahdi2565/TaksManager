@@ -61,9 +61,16 @@ public class Const {
     public static final String  ADD_DIALOG_FRAGMENT_TAG = "ir.mahdidev.taksmanager.add.dialog.fragment.tag";
     public static final String  ADD_FRAGMENT_TAG = "ir.mahdidev.taksmanager.add.fragment.tag";
     public static final String  EDIT_FRAGMENT_TAG = "ir.mahdidev.taksmanager.edit.fragment.tag";
+    public static final String  DATE_PICKER_FRAGMENT = "ir.mahdidev.taksmanager.date.picker.fragment";
+    public static final String  DATE_PICKER_FRAGMENT_BUNDLE_KEY = "ir.mahdidev.taksmanager.date.picker.fragment.bundle.key";
+    public static final String  TIME_PICKER_FRAGMENT = "ir.mahdidev.taksmanager.time.picker.fragment";
+    public static final String  TIME_PICKER_FRAGMENT_BUNDLE_KEY = "ir.mahdidev.taksmanager.time.picker.fragment.bundle.onactivity.result";
     public static final int Add_TASK_MODE = 1;
     public static final int EDIT_TASK_MODE = 0;
     public static final int TASK_DIALOG_DEFAULT_TASK_ID = 0;
     public static final int TASK_DIALOG_DEFAULT_USER_ID = 0;
+    public static final int TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT = 150;
+    public static final int TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT = 250;
+    public static final int TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT = 350;
 
 }

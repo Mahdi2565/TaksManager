@@ -29,7 +29,7 @@ import ir.mahdidev.taksmanager.util.TaskRepository;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TaskFragment extends Fragment implements TaskActivity.TaskActivityInterface {
+public class TaskFragment extends Fragment {
 
     private String status;
     private int userId;
@@ -101,7 +101,8 @@ public class TaskFragment extends Fragment implements TaskActivity.TaskActivityI
             @Override
             public void onReceive(int taskId , int UserId) {
                 TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.EDIT_TASK_MODE , taskId , userId);
-                dialogFragment.show(getChildFragmentManager() , Const.EDIT_DIALOG_FRAGMENT_TAG);
+                dialogFragment.setTargetFragment(TaskFragment.this , Const.TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT);
+                dialogFragment.show(getFragmentManager() , Const.EDIT_DIALOG_FRAGMENT_TAG);
             }
         });
     }
@@ -111,9 +112,5 @@ public class TaskFragment extends Fragment implements TaskActivity.TaskActivityI
         taskFragmentRecyclerView = view.findViewById(R.id.task_recyclerView);
     }
 
-    @Override
-    public void onClickedSave(boolean isClicked) {
-        Log.e("TAG4" , "is clicked form destination" );
 
-    }
 }

@@ -20,7 +20,8 @@ import androidx.fragment.app.FragmentTransaction;
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.util.Const;
 
-public class TaskDialogFragment extends DialogFragment implements AddTaskFragment.AddFragmentInterface {
+public class TaskDialogFragment extends DialogFragment implements AddTaskFragment.AddFragmentInterface
+, EditTaskFragment.EditFragmentInterface {
 
     private int modeTask ;
     private int taskId   ;
@@ -99,6 +100,11 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
 
     @Override
     public void onCancelClicked() {
+        getDialog().cancel();
+    }
+
+    @Override
+    public void onSaveClicked() {
         getDialog().cancel();
     }
 

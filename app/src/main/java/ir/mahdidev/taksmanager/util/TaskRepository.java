@@ -137,6 +137,28 @@ public class TaskRepository {
         }
         return taskList ;
     }
+
+    public TaskModel readTask ( int userId ,int taskId){
+        Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_TASK + " " +
+                "WHERE " + Const.DB.TABLE_TASK_ID + " = " +taskId + " AND " +
+                Const.DB.TABLE_TASK_USER_ID + " = " + userId, null);
+        while (cursor.moveToNext()){
+            TaskModel taskModel = new TaskModel();
+            taskModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_ID)));
+            taskModel.setUserId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_USER_ID)));
+            taskModel.setTitle(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TITLE)));
+            taskModel.setDescription(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DESCRIPTION)));
+            taskModel.setStatus(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_STATUS)));
+            taskModel.setDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DATE)));
+            taskModel.setTime(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TIME)));
+            return taskModel;
+        }
+        if (cursor != null){
+            cursor.close();
+        }
+        return null ;
+    }
+
     public boolean insertTask( int userId , String title , String description ,
                               String status , String date , String time){
         ContentValues contentValues = new ContentValues();
@@ -151,6 +173,22 @@ public class TaskRepository {
        isInsert =  G.DB.insert(Const.DB.DB_TABLE_TASK , null , contentValues) > 0;
 
        return isInsert;
+    }
+
+    public boolean updateTask( int taskId ,int userId , String title , String description ,
+                              String status , String date , String time){
+        boolean isUpdate ;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Const.DB.TABLE_TASK_USER_ID , userId);
+        contentValues.put(Const.DB.TABLE_TASK_TITLE , title);
+        contentValues.put(Const.DB.TABLE_TASK_DESCRIPTION , description);
+        contentValues.put(Const.DB.TABLE_TASK_STATUS , status);
+        contentValues.put(Const.DB.TABLE_TASK_DATE , date);
+        contentValues.put(Const.DB.TABLE_TASK_TIME , time);
+
+        isUpdate =G.DB.update(Const.DB.DB_TABLE_TASK , contentValues , Const.DB.TABLE_TASK_ID + " = " +
+                taskId + " AND " + Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
+        return isUpdate;
     }
    /* public void insertTestData(){
         for (int i = 1 ; i<15 ; i++){

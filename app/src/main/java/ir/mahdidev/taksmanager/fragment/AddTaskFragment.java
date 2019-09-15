@@ -1,7 +1,9 @@
 package ir.mahdidev.taksmanager.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import ir.mahdidev.taksmanager.R;
@@ -30,7 +33,7 @@ import ir.mahdidev.taksmanager.util.TaskRepository;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddTaskFragment extends Fragment {
+public class AddTaskFragment extends Fragment  {
 
     private TextInputEditText titleEdt;
     private TextInputEditText descriptionEdt;
@@ -42,6 +45,8 @@ public class AddTaskFragment extends Fragment {
     private String status = "";
     private int userId ;
     private AddFragmentInterface addFragmentInterface;
+    private Date dateReceive = null;
+    private Date timeReceive = null;
 
     private TaskRepository repository = TaskRepository.getInstance();
     public AddTaskFragment() {
@@ -81,7 +86,10 @@ public class AddTaskFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
-        setDateAndTime();
+        setDate();
+        setTime();
+        dateBtnFunction();
+        timeBtnFunction();
         insertDataToDb();
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,13 +99,59 @@ public class AddTaskFragment extends Fragment {
         });
     }
 
-    private void setDateAndTime() {
-        DateFormat date = new SimpleDateFormat("MMM dd yyyy" , Locale.US);
-        String dateFormatted = date.format(Calendar.getInstance().getTime());
-        DateFormat time = new SimpleDateFormat("hh:mm a" , Locale.US);
-        String timeFormatted = time.format(Calendar.getInstance().getTime());
-        dateBtn.setText(dateFormatted);
-        timeBtn.setText(timeFormatted);
+    private void setTime() {
+        if (timeReceive == null){
+            DateFormat timeFormat = new SimpleDateFormat("hh:mm a" , Locale.US);
+            String timeFormatted = timeFormat.format(Calendar.getInstance().getTime());
+            timeBtn.setText(timeFormatted);
+        }else {
+            DateFormat timeFormat = new SimpleDateFormat("hh:mm a" , Locale.US);
+            String timeFormatted = timeFormat.format(timeReceive);
+            timeBtn.setText(timeFormatted);
+        }
+    }
+
+    private void timeBtnFunction() {
+
+        timeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(timeBtn.getText().toString());
+                timePickerFragment.setTargetFragment(AddTaskFragment.this , Const.TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT);
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout , timePickerFragment)
+                        .addToBackStack(null)
+                        .commit();
+
+            }
+        });
+    }
+
+    private void dateBtnFunction() {
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(dateBtn.getText().toString());
+                datePickerFragment.setTargetFragment(AddTaskFragment.this , Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT);
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout , datePickerFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+    }
+
+    private void setDate() {
+        if (dateReceive == null){
+            DateFormat date = new SimpleDateFormat("MMM dd yyyy" , Locale.US);
+            String dateFormatted = date.format(Calendar.getInstance().getTime());
+            dateBtn.setText(dateFormatted);
+        }else {
+            DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy" , Locale.US);
+            String dateFormatted = dateFormat.format(dateReceive);
+            dateBtn.setText(dateFormatted);
+
+        }
     }
 
     private void insertDataToDb() {
@@ -162,4 +216,16 @@ public class AddTaskFragment extends Fragment {
         void onCancelClicked () ;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (!(resultCode == Activity.RESULT_OK)){
+            return;
+        }
+        if (requestCode == Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT){
+            dateReceive = (Date) data.getSerializableExtra(Const.DATE_PICKER_FRAGMENT_BUNDLE_KEY);
+        }else {
+            timeReceive = (Date) data.getSerializableExtra(Const.TIME_PICKER_FRAGMENT_BUNDLE_KEY) ;
+        }
+    }
 }
