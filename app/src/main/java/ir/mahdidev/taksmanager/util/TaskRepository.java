@@ -190,6 +190,13 @@ public class TaskRepository {
                 taskId + " AND " + Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
         return isUpdate;
     }
+    public boolean deleteTask (int taskId , int userId){
+        boolean isDeleted ;
+       isDeleted = G.DB.delete(Const.DB.DB_TABLE_TASK , Const.DB.TABLE_TASK_ID + " = " + taskId +" " +
+                " AND " + Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
+
+        return isDeleted ;
+    }
    /* public void insertTestData(){
         for (int i = 1 ; i<15 ; i++){
             ContentValues insertValues = new ContentValues();

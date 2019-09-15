@@ -104,6 +104,20 @@ public class EditTaskFragment extends Fragment {
         dateBtnFunction();
         setReceiveDate();
         saveBtnFunction();
+        deleteBtnFunction();
+    }
+
+    private void deleteBtnFunction() {
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DeleteFragment deleteFragment = DeleteFragment.newInstance(taskId , userId);
+                deleteFragment.setTargetFragment(EditTaskFragment.this , Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT);
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout , deleteFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     private void saveBtnFunction() {
@@ -143,7 +157,7 @@ public class EditTaskFragment extends Fragment {
                 }
             }
         });
-        
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -287,9 +301,11 @@ public class EditTaskFragment extends Fragment {
         if (requestCode == Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT){
             dateReceive = (Date) data.getSerializableExtra(Const.DATE_PICKER_FRAGMENT_BUNDLE_KEY);
             isEditable = true;
-        }else {
+        }else if (requestCode == Const.TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT){
             timeReceive = (Date) data.getSerializableExtra(Const.TIME_PICKER_FRAGMENT_BUNDLE_KEY) ;
             isEditable = true;
+        }else if (requestCode == Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT){
+            editFragmentInterface.onSaveClicked();
         }
     }
 

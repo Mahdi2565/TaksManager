@@ -20,4 +20,7 @@
     <string name="cancel_btn">Cancel</string>
     <string name="delete_btn">Delete</string>
     <string name="edit_btn">Edit</string>
+    <string name="remove_task_text">Do you want delete this task ?</string>
+    <string name="no_txt">No</string>
+    <string name="yes_txt">Yes</string>
 </resources>
