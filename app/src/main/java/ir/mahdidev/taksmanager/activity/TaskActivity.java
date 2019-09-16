@@ -22,10 +22,12 @@ import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.adapter.ViewPagerAdapter;
 import ir.mahdidev.taksmanager.fragment.TaskDialogFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
+import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
 import ir.mahdidev.taksmanager.util.Const;
+import ir.mahdidev.taksmanager.util.G;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
-public class TaskActivity extends AppCompatActivity implements View.OnClickListener , TaskDialogFragment.TaskDialogInterface {
+public class TaskActivity extends AppCompatActivity implements View.OnClickListener, TaskDialogFragment.TaskDialogInterface, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private UserModel userModel;
     private TextView titleToolbar;
@@ -71,7 +73,7 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
         titleToolbar.setText(titleToolbarTxt);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager() , userModel.getId());
         viewPager.setAdapter(viewPagerAdapter);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(3);
         tableLayout.setupWithViewPager(viewPager);
     }
 
@@ -125,7 +127,9 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.remove_tasks : {
-
+                TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.DELETE_TASK_MODE , Const.TASK_DIALOG_DEFAULT_TASK_ID
+                        , userModel.getId());
+                dialogFragment.show(getSupportFragmentManager() , Const.DELETE_ALL_TASK_DIALOG_FRAGMENT_TAG);
                 fab_menu.close(true);
                 break;
             }
@@ -138,14 +142,20 @@ public class TaskActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onSavedClicked(boolean isclicked) {
+    public void onSavedClicked() {
+        viewPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        G.getInstance().setConnectivityListener(this);
 
     }
-    public interface TaskActivityInterface{
-        void onClickedSave(boolean isClicked);
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        Log.e("TAG4" , "TASK activity " + isConnected);
     }
-    public TaskActivityInterface taskActivityInterface;
-    public void setTaskActivityInterface (TaskActivityInterface taskActivityInterface){
-        this.taskActivityInterface = taskActivityInterface ;
-    }
+
+
 }

@@ -1,7 +1,9 @@
 package ir.mahdidev.taksmanager.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -37,6 +41,8 @@ public class TaskFragment extends Fragment {
     private TaskRepository repository = TaskRepository.getInstance();
     private RecyclerView taskFragmentRecyclerView;
     private TaskRecyclerViewAdapter recyclerViewAdapter;
+    private LinearLayout noTaskImage;
+    private TextView noTaskText;
     public TaskFragment() {
     }
 
@@ -57,6 +63,15 @@ public class TaskFragment extends Fragment {
 
     }
 
+    private void checkExistTask(){
+        if (taskList.isEmpty()){
+            noTaskText.setVisibility(View.VISIBLE);
+            noTaskImage.setVisibility(View.VISIBLE);
+        }else {
+            noTaskText.setVisibility(View.GONE);
+            noTaskImage.setVisibility(View.GONE);
+        }
+    }
     private void getDataFromBundle() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -81,6 +96,7 @@ public class TaskFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
         initRecyclerView();
+        checkExistTask();
     }
 
     private void initRecyclerView() {
@@ -110,7 +126,21 @@ public class TaskFragment extends Fragment {
 
     private void initViews(View view) {
         taskFragmentRecyclerView = view.findViewById(R.id.task_recyclerView);
+        noTaskImage = view.findViewById(R.id.linear_no_task_image);
+        noTaskText  = view.findViewById(R.id.no_task_txt);
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (!(resultCode == Activity.RESULT_OK)){
+            return;
+        }
+        if (requestCode == Const.TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT){
+            readDatabase();
+            recyclerViewAdapter.updateList(taskList);
+            recyclerViewAdapter.notifyDataSetChanged();
+            checkExistTask();
+        }
+    }
 }

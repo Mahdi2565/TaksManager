@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +93,7 @@ public class AddTaskFragment extends Fragment  {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addFragmentInterface.onCancelClicked();
+                addFragmentInterface.onCancelAddTaskClicked();
             }
         });
     }
@@ -155,6 +154,7 @@ public class AddTaskFragment extends Fragment  {
     }
 
     private void insertDataToDb() {
+
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup chipGroup, int i) {
@@ -172,8 +172,12 @@ public class AddTaskFragment extends Fragment  {
                         break;
                     }
                 }
+                if (chipGroup.getCheckedChipId() == -1){
+                    status = "";
+                }
             }
         });
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,7 +196,7 @@ public class AddTaskFragment extends Fragment  {
 
                 if (isInsert){
                     Toast.makeText(getActivity() , "Task Insert Successfully" , Toast.LENGTH_SHORT).show();
-                    addFragmentInterface.onSaveClicked(true);
+                    addFragmentInterface.onAddTaskClicked();
                 }
 
             }
@@ -212,8 +216,8 @@ public class AddTaskFragment extends Fragment  {
     }
 
     public interface AddFragmentInterface{
-        void onSaveClicked(boolean issaved);
-        void onCancelClicked () ;
+        void onAddTaskClicked();
+        void onCancelAddTaskClicked() ;
     }
 
     @Override

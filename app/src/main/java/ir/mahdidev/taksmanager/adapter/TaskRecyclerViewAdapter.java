@@ -70,4 +70,10 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     public void setTaskRecyclerViewInterface (TaskRecyclerViewInterface taskRecyclerViewInterface){
         this.taskRecyclerViewInterface = taskRecyclerViewInterface;
     }
+
+    public void updateList(ArrayList<TaskModel> taskList){
+        this.taskList = new ArrayList<>();
+        this.taskList.addAll(taskList);
+    }
+
 }

@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.util.Const;
@@ -98,12 +99,16 @@ public class TimePickerFragment extends Fragment {
     }
 
     private void setTimeToTimePicker() {
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm a" , Locale.US);
         try {
             time  = format.parse(this.timeReceive);
+            Log.e("TAG4" , "is not null");
         } catch (ParseException e) {
             e.printStackTrace();
+            Log.e("TAG4" , "is null");
+
         }
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
 

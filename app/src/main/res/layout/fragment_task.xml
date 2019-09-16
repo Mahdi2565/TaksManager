@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/task_recyclerView"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.TaskFragment">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/task_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
-</androidx.recyclerview.widget.RecyclerView>
+    <LinearLayout
+        android:id="@+id/linear_no_task_image"
+        android:visibility="gone"
+        android:layout_above="@id/no_task_txt"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/task"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:visibility="gone"
+        android:textSize="18sp"
+        android:id="@+id/no_task_txt"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:text="@string/task_not_exist"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

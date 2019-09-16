@@ -1,24 +1,23 @@
 package ir.mahdidev.taksmanager.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.fragment.LoginFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
-import ir.mahdidev.taksmanager.util.Const;
+import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
+import ir.mahdidev.taksmanager.util.G;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
-public class MainActivity extends SingleFragmentActivity {
+public class MainActivity extends SingleFragmentActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 
     @Override
     public Fragment fragment() {
@@ -33,6 +32,7 @@ public class MainActivity extends SingleFragmentActivity {
         TaskRepository repository = TaskRepository.getInstance();
         UserModel userModel = repository.UserLoggedIn();
         if (userModel != null){
+
             Intent intent = TaskActivity.newIntent(this , userModel);
             startActivity(intent);
             finish();
@@ -53,5 +53,14 @@ public class MainActivity extends SingleFragmentActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        G.getInstance().setConnectivityListener(this);
+    }
 
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        Log.e("TAG4" , "MAin activity " + isConnected);
+    }
 }

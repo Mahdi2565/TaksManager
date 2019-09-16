@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.util.Const;
@@ -97,7 +98,7 @@ public class DatePickerFragment extends Fragment {
 
     private void setDateToDatePicker() {
 
-        SimpleDateFormat format = new SimpleDateFormat("MMM dd yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("MMM dd yyyy", Locale.US);
         try {
            date  = format.parse(this.dateReceive);
         } catch (ParseException e) {

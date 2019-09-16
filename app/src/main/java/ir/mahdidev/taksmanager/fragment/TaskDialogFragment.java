@@ -1,6 +1,8 @@
 package ir.mahdidev.taksmanager.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,13 +17,14 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.util.Const;
 
 public class TaskDialogFragment extends DialogFragment implements AddTaskFragment.AddFragmentInterface
-, EditTaskFragment.EditFragmentInterface {
+, EditTaskFragment.EditFragmentInterface , DeleteAllTasksFragment.DeleteAllTaskFragmentInterface {
 
     private int modeTask ;
     private int taskId   ;
@@ -73,12 +76,16 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
             transaction.replace(R.id.frame_layout, addTaskFragment , Const.ADD_FRAGMENT_TAG);
             transaction.commit();
 
-        }else {
+        }else if (modeTask == Const.EDIT_TASK_MODE){
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(taskId , userId);
             transaction.replace(R.id.frame_layout, editTaskFragment);
             transaction.commit();
-
+        } else if (modeTask == Const.DELETE_TASK_MODE){
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            DeleteAllTasksFragment deleteAllTasksFragment = DeleteAllTasksFragment.newInstance(userId);
+            transaction.replace(R.id.frame_layout, deleteAllTasksFragment);
+            transaction.commit();
         }
     }
 
@@ -93,22 +100,33 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
     }
 
     @Override
-    public void onSaveClicked(boolean isSaved) {
+    public void onAddTaskClicked() {
         getDialog().cancel();
-        taskDialogInterface.onSavedClicked(isSaved);
+        taskDialogInterface.onSavedClicked();
     }
 
     @Override
-    public void onCancelClicked() {
+    public void onCancelAddTaskClicked() {
         getDialog().cancel();
     }
 
     @Override
-    public void onSaveClicked() {
+    public void onEditTaskClicked() {
         getDialog().cancel();
+        taskDialogInterface.onSavedClicked();
+        Fragment fragment= getTargetFragment();
+        Intent intent = new Intent();
+        fragment.onActivityResult(getTargetRequestCode() , Activity.RESULT_OK , intent);
+    }
+
+    @Override
+    public void onDeleteAllTaskClicked() {
+        getDialog().cancel();
+        taskDialogInterface.onSavedClicked();
     }
 
     public interface TaskDialogInterface{
-        void onSavedClicked(boolean isclicked);
+        void onSavedClicked();
     }
+
 }
