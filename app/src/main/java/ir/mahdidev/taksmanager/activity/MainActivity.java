@@ -32,7 +32,6 @@ public class MainActivity extends SingleFragmentActivity implements Connectivity
         TaskRepository repository = TaskRepository.getInstance();
         UserModel userModel = repository.UserLoggedIn();
         if (userModel != null){
-
             Intent intent = TaskActivity.newIntent(this , userModel);
             startActivity(intent);
             finish();

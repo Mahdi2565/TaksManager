@@ -2,8 +2,11 @@ package ir.mahdidev.taksmanager.util;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,18 +28,25 @@ public class TaskRepository {
         return taskRepository;
     }
 
+    public byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        return outputStream.toByteArray();
+    }
+
     public boolean insertUserToDb(String username , String password , String email ,
-                               String age , boolean admin){
+                                  String age , boolean admin , Bitmap imageUser){
         Date date = new Date();
         ContentValues contentValues = new ContentValues();
         boolean isInsertToDb  ;
-
+        byte[] image = getBitmapAsByteArray(imageUser);
         contentValues.put(Const.DB.TABLE_USER_USERNAME , username);
         contentValues.put(Const.DB.TABLE_USER_PASSWORD , password);
         contentValues.put(Const.DB.TABLE_USER_EMAIL , email);
         contentValues.put(Const.DB.TABLE_USER_AGE , age);
         contentValues.put(Const.DB.TABLE_USER_IS_ADMIN , admin?1:0 );
         contentValues.put(Const.DB.TABLE_USER_REGISTER_DATE , date.toString());
+        contentValues.put(Const.DB.TABLE_USER_IMAGE , image );
 
        isInsertToDb = G.DB.insert(Const.DB.DB_TABLE_USER , null , contentValues) > 0;
 
@@ -106,6 +116,7 @@ public class TaskRepository {
     }
 
     private void setUserModel(UserModel userModel , Cursor cursor){
+       // byte[] imageUser = cursor.getBlob(cursor.getColumnIndex(Const.DB.TABLE_USER_IMAGE));
         userModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_ID)));
         userModel.setUserName(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_USERNAME)));
         userModel.setPassword(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_PASSWORD)));
@@ -114,6 +125,7 @@ public class TaskRepository {
         userModel.setIsLoggedIn(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_LOGGED_IN)));
         userModel.setIsAdmin(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_ADMIN)));
         userModel.setRegisterDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_REGISTER_DATE)));
+        //userModel.setImageUser(BitmapFactory.decodeByteArray(imageUser, 0, imageUser.length));
     }
 
     public ArrayList<TaskModel> readTask (String status , int userId){

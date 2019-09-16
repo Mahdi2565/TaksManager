@@ -12,6 +12,7 @@ public class Const {
 
         public static final String TABLE_USER_IS_ADMIN   = "is_admin";
         public static final String TABLE_USER_ID = "id";
+        public static final String TABLE_USER_IMAGE = "image_user";
         public static final String TABLE_USER_USERNAME = "username";
         public static final String TABLE_USER_PASSWORD = "password";
         public static final String TABLE_USER_EMAIL    = "emial";
@@ -35,7 +36,8 @@ public class Const {
                 Const.DB.TABLE_USER_EMAIL + " TEXT    NOT NULL , " +
                 Const.DB.TABLE_USER_AGE + " TEXT    NOT NULL , " +
                 Const.DB.TABLE_USER_IS_LOGGED_IN + " INTEGER DEFAULT (0) , " +
-                Const.DB.TABLE_USER_REGISTER_DATE + " TEXT NOT NULL )"
+                Const.DB.TABLE_USER_REGISTER_DATE + " TEXT NOT NULL , " +
+                Const.DB.TABLE_USER_IMAGE + " BLOB ) "
                 ;
         public static final String CREATE_TASK_TABLE = "CREATE TABLE IF NOT EXISTS " +
                 Const.DB.DB_TABLE_TASK + " ( " +
@@ -48,7 +50,8 @@ public class Const {
                 DB.TABLE_TASK_TIME + " TEXT NOT NULL ) "
                 ;
     }
-    public static final String USER_MODEL_LOGGED_IN_INTENT_KEY = "ir.mahdidev.taksmanager.usermodel";
+    public static final String USER_MODEL_LOGGED_IN_INTENT_KEY = "ir.mahdidev.taksmanager.usermodel.task.activity.intent.key";
+    public static final String USER_MODEL_LOGGED_IN_MAIN_FRAGMENT_BUNDLE_KEY = "ir.mahdidev.taksmanager.usermodel.main.fragment.bundle.key";
     public static final String STATUS_BUNDLE_KEY = "ir.mahdidev.taksmanager.status.bundle.key";
     public static final String USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.userid";
     public static final String MODE_TASK_BUNDLE_KEY = "ir.mahdidev.taksmanager.mode.task";
@@ -78,6 +81,8 @@ public class Const {
     public static final int TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT = 250;
     public static final int TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT = 350;
     public static final int TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT = 450;
-    public static final int TARGET_REQUSET_CODE_DELETE_ALL_FRAGMENT_FRAGMENT = 550;
+    public static final int TARGET_REQUSET_CODE_MAIN_FRAGMENT = 550;
+    public static final int READ_INTERNAL_STORAGE_PERMISION= 650;
+    public static final int GET_IMAGE_REQUEST_CODE = 750;
 
 }

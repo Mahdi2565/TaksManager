@@ -29,7 +29,6 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
     private int modeTask ;
     private int taskId   ;
     private int userId   ;
-    private TaskDialogInterface taskDialogInterface;
 
     public static TaskDialogFragment newInstance(int mode , int taskId , int userId) {
 
@@ -40,12 +39,6 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
         TaskDialogFragment fragment = new TaskDialogFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        taskDialogInterface = (TaskDialogInterface) context;
     }
 
     @Override
@@ -102,7 +95,9 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
     @Override
     public void onAddTaskClicked() {
         getDialog().cancel();
-        taskDialogInterface.onSavedClicked();
+        Fragment fragment= getTargetFragment();
+        Intent intent = new Intent();
+        fragment.onActivityResult(getTargetRequestCode() , Activity.RESULT_OK , intent);
     }
 
     @Override
@@ -113,7 +108,6 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
     @Override
     public void onEditTaskClicked() {
         getDialog().cancel();
-        taskDialogInterface.onSavedClicked();
         Fragment fragment= getTargetFragment();
         Intent intent = new Intent();
         fragment.onActivityResult(getTargetRequestCode() , Activity.RESULT_OK , intent);
@@ -122,11 +116,14 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
     @Override
     public void onDeleteAllTaskClicked() {
         getDialog().cancel();
-        taskDialogInterface.onSavedClicked();
+        Fragment fragment= getTargetFragment();
+        Intent intent = new Intent();
+        fragment.onActivityResult(getTargetRequestCode() , Activity.RESULT_OK , intent);
     }
 
-    public interface TaskDialogInterface{
-        void onSavedClicked();
+    @Override
+    public void onCancelDeleteAllTask() {
+        getDialog().cancel();
     }
 
 }

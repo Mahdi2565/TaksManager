@@ -1,10 +1,13 @@
 package ir.mahdidev.taksmanager.model;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 public class UserModel implements Serializable {
     private int id              ;
     private int isAdmin         ;
+    private Bitmap imageUser    ;
     private String userName     ;
     private String password     ;
     private String email        ;
@@ -15,15 +18,24 @@ public class UserModel implements Serializable {
     public UserModel() {
     }
 
-    public UserModel(int id, int isAdmin, String userName, String password, String email, String age, int isLoggedIn, String registerDate) {
+    public UserModel(int id, int isAdmin, Bitmap imageUser, String userName, String password, String email, String age, int isLoggedIn, String registerDate) {
         this.id = id;
         this.isAdmin = isAdmin;
+        this.imageUser = imageUser;
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.age = age;
         this.isLoggedIn = isLoggedIn;
         this.registerDate = registerDate;
+    }
+
+    public Bitmap getImageUser() {
+        return imageUser;
+    }
+
+    public void setImageUser(Bitmap imageUser) {
+        this.imageUser = imageUser;
     }
 
     public int getId() {

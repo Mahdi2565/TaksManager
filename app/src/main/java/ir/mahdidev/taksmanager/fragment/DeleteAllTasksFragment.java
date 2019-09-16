@@ -10,9 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -74,6 +76,7 @@ public class DeleteAllTasksFragment extends Fragment {
             public void onClick(View view) {
                 if (getFragmentManager() != null)
                     getFragmentManager().popBackStack();
+                    deleteAllTaskFragmentInterface.onCancelDeleteAllTask();
             }
         });
     }
@@ -85,6 +88,8 @@ public class DeleteAllTasksFragment extends Fragment {
                 boolean isDeleted = repository.deleteTask(userId);
                 if (isDeleted){
                     deleteAllTaskFragmentInterface.onDeleteAllTaskClicked();
+                }else {
+                    Toast.makeText(getActivity() , "There is no task for delete !" , Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -97,5 +102,6 @@ public class DeleteAllTasksFragment extends Fragment {
     public DeleteAllTaskFragmentInterface deleteAllTaskFragmentInterface;
     public interface DeleteAllTaskFragmentInterface{
         void onDeleteAllTaskClicked();
+        void onCancelDeleteAllTask();
     }
 }
