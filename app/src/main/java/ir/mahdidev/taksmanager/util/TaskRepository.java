@@ -194,7 +194,12 @@ public class TaskRepository {
         boolean isDeleted ;
        isDeleted = G.DB.delete(Const.DB.DB_TABLE_TASK , Const.DB.TABLE_TASK_ID + " = " + taskId +" " +
                 " AND " + Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
+        return isDeleted ;
+    }
 
+    public boolean deleteTask (int userId){
+        boolean isDeleted ;
+        isDeleted = G.DB.delete(Const.DB.DB_TABLE_TASK ,  Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
         return isDeleted ;
     }
    /* public void insertTestData(){

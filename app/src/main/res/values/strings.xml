@@ -23,4 +23,6 @@
     <string name="remove_task_text">Do you want delete this task ?</string>
     <string name="no_txt">No</string>
     <string name="yes_txt">Yes</string>
+    <string name="task_not_exist">You Dont Have Any Task</string>
+    <string name="delete_all_task">Do you want delete all tasks ?</string>
 </resources>

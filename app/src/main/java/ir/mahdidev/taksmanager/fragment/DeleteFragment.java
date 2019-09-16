@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class DeleteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            taskId = bundle.getInt(Const.DELETE_FRAGMENT_USER_ID_BUNDLE_KEY);
+            taskId = bundle.getInt(Const.DELETE_FRAGMENT_TASK_ID_BUNDLE_KEY);
             userId = bundle.getInt(Const.DELETE_FRAGMENT_USER_ID_BUNDLE_KEY);
         }
     }

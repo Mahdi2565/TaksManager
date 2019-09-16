@@ -23,7 +23,6 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -155,6 +154,9 @@ public class EditTaskFragment extends Fragment {
                         break;
                     }
                 }
+                if (chipGroup.getCheckedChipId() == -1){
+                    status = "";
+                }
             }
         });
 
@@ -178,7 +180,7 @@ public class EditTaskFragment extends Fragment {
 
                 if (isUpdate){
                     Toast.makeText(getActivity() , "Task Update Successfully" , Toast.LENGTH_SHORT).show();
-                    editFragmentInterface.onSaveClicked();
+                    editFragmentInterface.onEditTaskClicked();
                 }
 
             }
@@ -305,7 +307,7 @@ public class EditTaskFragment extends Fragment {
             timeReceive = (Date) data.getSerializableExtra(Const.TIME_PICKER_FRAGMENT_BUNDLE_KEY) ;
             isEditable = true;
         }else if (requestCode == Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT){
-            editFragmentInterface.onSaveClicked();
+            editFragmentInterface.onEditTaskClicked();
         }
     }
 
@@ -316,6 +318,6 @@ public class EditTaskFragment extends Fragment {
     }
     public EditFragmentInterface editFragmentInterface;
     public interface EditFragmentInterface{
-        void onSaveClicked();
+        void onEditTaskClicked();
     }
 }
