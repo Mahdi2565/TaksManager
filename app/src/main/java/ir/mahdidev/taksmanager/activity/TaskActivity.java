@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ir.mahdidev.taksmanager.R;
+import ir.mahdidev.taksmanager.fragment.EditProfileFragment;
 import ir.mahdidev.taksmanager.fragment.MainFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
@@ -105,6 +106,12 @@ public class TaskActivity extends SingleFragmentActivity implements  Connectivit
 
     @Override
     public void onReceive() {
-        Log.e("TAG4" , "TASK ACTIVITY");
+        EditProfileFragment editProfile = EditProfileFragment.newInstance(userModel.getId());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_layout , editProfile)
+                .addToBackStack(null)
+                .commit();
+
     }
 }

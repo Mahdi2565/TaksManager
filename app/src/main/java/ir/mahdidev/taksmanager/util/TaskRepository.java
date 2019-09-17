@@ -116,7 +116,6 @@ public class TaskRepository {
     }
 
     private void setUserModel(UserModel userModel , Cursor cursor){
-       // byte[] imageUser = cursor.getBlob(cursor.getColumnIndex(Const.DB.TABLE_USER_IMAGE));
         userModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_ID)));
         userModel.setUserName(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_USERNAME)));
         userModel.setPassword(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_PASSWORD)));
@@ -125,7 +124,8 @@ public class TaskRepository {
         userModel.setIsLoggedIn(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_LOGGED_IN)));
         userModel.setIsAdmin(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_ADMIN)));
         userModel.setRegisterDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_REGISTER_DATE)));
-        //userModel.setImageUser(BitmapFactory.decodeByteArray(imageUser, 0, imageUser.length));
+       // userModel.setImageUser(imageUser);
+     //   userModel.setImageUser(BitmapFactory.decodeByteArray(imageUser, 0, imageUser.length));
     }
 
     public ArrayList<TaskModel> readTask (String status , int userId){
@@ -214,6 +214,48 @@ public class TaskRepository {
         isDeleted = G.DB.delete(Const.DB.DB_TABLE_TASK ,  Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
         return isDeleted ;
     }
+
+    public UserModel readUserProfile(int userId){
+        Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_USER + " WHERE "
+        + Const.DB.TABLE_USER_ID + " = " + userId , null);
+
+        while (cursor.moveToNext()){
+            UserModel userModel = new UserModel();
+
+            byte[] imageUser = cursor.getBlob(cursor.getColumnIndex(Const.DB.TABLE_USER_IMAGE));
+            userModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_ID)));
+            userModel.setUserName(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_USERNAME)));
+            userModel.setPassword(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_PASSWORD)));
+            userModel.setAge(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_AGE)));
+            userModel.setEmail(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_EMAIL)));
+            userModel.setIsLoggedIn(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_LOGGED_IN)));
+            userModel.setIsAdmin(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_ADMIN)));
+            userModel.setRegisterDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_REGISTER_DATE)));
+            userModel.setImageUser(imageUser);
+            setUserModel(userModel , cursor);
+            return userModel ;
+        }
+        return null ;
+    }
+
+    public boolean updateUser(int userId  , String password , String email ,
+                              String age , boolean admin , Bitmap imageUser){
+
+        ContentValues contentValues = new ContentValues();
+        boolean isUpdated  ;
+        byte[] image = getBitmapAsByteArray(imageUser);
+        contentValues.put(Const.DB.TABLE_USER_PASSWORD , password);
+        contentValues.put(Const.DB.TABLE_USER_EMAIL , email);
+        contentValues.put(Const.DB.TABLE_USER_AGE , age);
+        contentValues.put(Const.DB.TABLE_USER_IS_ADMIN , admin?1:0 );
+        contentValues.put(Const.DB.TABLE_USER_IMAGE , image );
+
+        isUpdated = G.DB.update(Const.DB.DB_TABLE_USER , contentValues , Const.DB.TABLE_USER_ID + " = " + userId , null
+         ) > 0;
+
+        return isUpdated ;
+    }
+
    /* public void insertTestData(){
         for (int i = 1 ; i<15 ; i++){
             ContentValues insertValues = new ContentValues();

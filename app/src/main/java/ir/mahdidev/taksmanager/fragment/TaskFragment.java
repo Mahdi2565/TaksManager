@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import ir.mahdidev.taksmanager.R;
@@ -28,6 +30,7 @@ import ir.mahdidev.taksmanager.adapter.TaskRecyclerViewAdapter;
 import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
+import ir.mahdidev.taksmanager.util.EventBusMessage;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
 /**
@@ -137,10 +140,14 @@ public class TaskFragment extends Fragment {
             return;
         }
         if (requestCode == Const.TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT){
+            EventBusMessage eventBusMessage = new EventBusMessage();
+            eventBusMessage.setEditClicked(true);
+            EventBus.getDefault().postSticky(eventBusMessage);
             readDatabase();
             recyclerViewAdapter.updateList(taskList);
             recyclerViewAdapter.notifyDataSetChanged();
             checkExistTask();
         }
     }
+
 }

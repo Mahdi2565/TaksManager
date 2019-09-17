@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.activity.TaskActivity;
 import ir.mahdidev.taksmanager.model.UserModel;
+import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
 /**
@@ -79,7 +80,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.register_btn_login :{
-                getFragmentManager().beginTransaction().replace(R.id.frame_layout , new RegisterFragment()).addToBackStack(null)
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout , new RegisterFragment()
+                        , Const.REGISTER_FRAGMENT_TAG)
+                        .addToBackStack(null)
                         .commit();
 
                 break;

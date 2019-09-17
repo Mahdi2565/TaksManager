@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,15 @@ import android.widget.ImageView;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.tabs.TabLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.adapter.ViewPagerAdapter;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
+import ir.mahdidev.taksmanager.util.EventBusMessage;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
 /**
@@ -41,7 +47,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public MainFragment() {
         // Required empty public constructor
     }
-
     public static MainFragment newInstance(UserModel userModel) {
         Bundle args = new Bundle();
         args.putSerializable(Const.USER_MODEL_LOGGED_IN_MAIN_FRAGMENT_BUNDLE_KEY , userModel);
@@ -52,8 +57,25 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onAttach(Context context) {
+        EventBus.getDefault().register(this);
         super.onAttach(context);
         mainFragmentInterface = (MainFragmentInterface) context;
+        TaskDialogFragment taskDialogFragment = (TaskDialogFragment) getFragmentManager()
+                .findFragmentByTag(Const.ADD_DIALOG_FRAGMENT_TAG);
+        DeleteAllTasksFragment deleteAllTasksFragment = (DeleteAllTasksFragment) getFragmentManager()
+                .findFragmentByTag(Const.DELETE_ALL_TASK_DIALOG_FRAGMENT_TAG);
+        if (taskDialogFragment != null ) {
+            taskDialogFragment.setTargetFragment(this, Const.TARGET_REQUSET_CODE_MAIN_FRAGMENT);
+        }
+        if (deleteAllTasksFragment != null) {
+            deleteAllTasksFragment.setTargetFragment(this , Const.TARGET_REQUSET_CODE_MAIN_FRAGMENT);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        EventBus.getDefault().unregister(this);
+        super.onDetach();
     }
 
     @Override
@@ -115,7 +137,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
     private void initViewPagerAndTablayout() {
 
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager() , userModel.getId());
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager() , userModel.getId());
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         tableLayout.setupWithViewPager(viewPager);
@@ -143,4 +165,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public interface MainFragmentInterface{
         void onReceive();
     }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onDataChangeEvent(EventBusMessage eventBusMessage){
+        if (eventBusMessage.isEditClicked()){
+            viewPagerAdapter.notifyDataSetChanged();
+            EventBus.getDefault().removeStickyEvent(EventBusMessage.class);
+        }
+    }
+
 }

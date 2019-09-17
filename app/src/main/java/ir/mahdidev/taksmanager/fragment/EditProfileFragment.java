@@ -18,13 +18,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -34,50 +32,65 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ir.mahdidev.taksmanager.R;
+import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegisterFragment extends Fragment {
-
+public class EditProfileFragment extends Fragment {
+    private int userId ;
+    private UserModel userModel;
+    private TaskRepository repository = TaskRepository.getInstance();
     private TextInputEditText userNameEdt;
     private TextInputEditText passwordEdt;
     private TextInputEditText emailEdt;
     private TextInputEditText ageEdt;
     private CircularImageView userImage ;
     private CheckBox isAdminCheckBox;
-    private Button signUpBtn;
-    private boolean isPermisionGranted ;
-    private Uri uriImage;
+    private Button updateBtn;
     private Bitmap imageBitmap = null ;
+    private boolean isPermisionGranted = false;
+    private Uri uriImage;
 
 
-    public RegisterFragment() {
+    public EditProfileFragment() {
+
     }
 
-    public static RegisterFragment newInstance() {
+    public static EditProfileFragment newInstance(int userId) {
         Bundle args = new Bundle();
-        RegisterFragment fragment = new RegisterFragment();
+        args.putInt(Const.EDIT_PROFILE_BUNDLE_KEY , userId);
+        EditProfileFragment fragment = new EditProfileFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            userId = bundle.getInt(Const.EDIT_PROFILE_BUNDLE_KEY);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        return inflater.inflate(R.layout.fragment_edit_profile, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViews(view);
+        readUserFromDb();
+        setDataToViews();
         selectUserImage();
-        signUpFunction();
+        updateBtnFunction();
     }
-
     private void selectUserImage() {
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,22 +110,16 @@ public class RegisterFragment extends Fragment {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, Const.GET_IMAGE_REQUEST_CODE);
     }
-
-    private void signUpFunction() {
-        final TaskRepository repository = TaskRepository.getInstance();
-        signUpBtn.setOnClickListener(new View.OnClickListener() {
+    private void updateBtnFunction() {
+        updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            String userName = userNameEdt.getText().toString().trim();
-            String password = passwordEdt.getText().toString().trim();
-            String email    = emailEdt.getText().toString().trim();
-            String age      = ageEdt.getText().toString().trim();
-            boolean isAdmin = isAdminCheckBox.isChecked();
+                String password = passwordEdt.getText().toString().trim();
+                String email    = emailEdt.getText().toString().trim();
+                String age      = ageEdt.getText().toString().trim();
+                boolean isAdmin = isAdminCheckBox.isChecked();
 
-                if (!(userName.length()> 6)){
-                    Toast.makeText(getActivity() , "Invalid user !" , Toast.LENGTH_SHORT ).show();
-                    return;
-                }
+                boolean isUpdate ;
 
                 if (!(password.length() > 6)){
 
@@ -132,24 +139,31 @@ public class RegisterFragment extends Fragment {
 
                     return;
                 }
-
-                if (repository.checkUserExists(userName)){
-                    Toast.makeText(getActivity() , "This userName exist" , Toast.LENGTH_SHORT ).show();
-                    return;
-                }
-                if (imageBitmap == null){
-
-                   imageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user_png_white);
-                }
-                boolean isInsertToDb =  repository.insertUserToDb(userName , password
-                , email , age, isAdmin , imageBitmap);
-                if (isInsertToDb)
-                    if (getFragmentManager() != null ) {
-                    getFragmentManager().popBackStack();
+                isUpdate  = repository.updateUser(userModel.getId() , password , email , age , isAdmin
+                 , imageBitmap );
+                if (isUpdate){
+                    Toast.makeText(getActivity() , "Update User Successfully" , Toast.LENGTH_SHORT).show();
+                    if (getFragmentManager() != null) {
+                        getFragmentManager().popBackStack();
+                    }
                 }
             }
         });
+    }
 
+    private void setDataToViews() {
+        imageBitmap = BitmapFactory.decodeByteArray(userModel.getImageUser() , 0, userModel.getImageUser().length);
+        userImage.setImageBitmap(imageBitmap);
+        userNameEdt.setText(userModel.getUserName());
+        userNameEdt.setEnabled(false);
+        passwordEdt.setText(userModel.getPassword());
+        emailEdt.setText(userModel.getEmail());
+        ageEdt.setText(userModel.getAge());
+        isAdminCheckBox.setChecked(userModel.getIsAdmin() == 1);
+    }
+
+    private void readUserFromDb() {
+        userModel = repository.readUserProfile(userId);
     }
 
     private void initViews(View view) {
@@ -158,10 +172,9 @@ public class RegisterFragment extends Fragment {
         emailEdt    = view.findViewById(R.id.email_edt_register);
         ageEdt      = view.findViewById(R.id.age_edt_register);
         isAdminCheckBox = view.findViewById(R.id.is_admin_checkbox_register);
-        signUpBtn = view.findViewById(R.id.sign_up_btn_register);
+        updateBtn = view.findViewById(R.id.update_btn);
         userImage = view.findViewById(R.id.user_img);
     }
-
     private boolean EMailValidation(String emailstring) {
         if (null == emailstring || emailstring.length() == 0) {
             return false;
@@ -172,7 +185,7 @@ public class RegisterFragment extends Fragment {
         Matcher emailMatcher = emailPattern.matcher(emailstring);
         return emailMatcher.matches();
     }
-        private boolean checkPermision() {
+    private boolean checkPermision() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if (ContextCompat.checkSelfPermission(getActivity() , Manifest.permission.READ_EXTERNAL_STORAGE )!= PackageManager.PERMISSION_GRANTED){

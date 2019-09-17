@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class UserModel implements Serializable {
     private int id              ;
     private int isAdmin         ;
-    private Bitmap imageUser    ;
+    private byte[] imageUser    ;
     private String userName     ;
     private String password     ;
     private String email        ;
@@ -18,7 +18,7 @@ public class UserModel implements Serializable {
     public UserModel() {
     }
 
-    public UserModel(int id, int isAdmin, Bitmap imageUser, String userName, String password, String email, String age, int isLoggedIn, String registerDate) {
+    public UserModel(int id, int isAdmin, byte[] imageUser, String userName, String password, String email, String age, int isLoggedIn, String registerDate) {
         this.id = id;
         this.isAdmin = isAdmin;
         this.imageUser = imageUser;
@@ -30,11 +30,11 @@ public class UserModel implements Serializable {
         this.registerDate = registerDate;
     }
 
-    public Bitmap getImageUser() {
+    public byte[] getImageUser() {
         return imageUser;
     }
 
-    public void setImageUser(Bitmap imageUser) {
+    public void setImageUser(byte[] imageUser) {
         this.imageUser = imageUser;
     }
 

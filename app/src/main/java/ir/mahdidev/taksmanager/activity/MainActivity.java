@@ -12,8 +12,10 @@ import android.view.WindowManager;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.fragment.LoginFragment;
+import ir.mahdidev.taksmanager.fragment.RegisterFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
+import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.G;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
@@ -21,7 +23,12 @@ public class MainActivity extends SingleFragmentActivity implements Connectivity
 
     @Override
     public Fragment fragment() {
-        return new LoginFragment();
+        if (getSupportFragmentManager().findFragmentByTag(Const.REGISTER_FRAGMENT_TAG) != null){
+            return new RegisterFragment();
+        }else {
+            return new LoginFragment();
+        }
+
     }
 
     @Override
@@ -29,6 +36,10 @@ public class MainActivity extends SingleFragmentActivity implements Connectivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         changeStatusBarColor();
+        checkLoggedIn();
+    }
+
+    private void checkLoggedIn() {
         TaskRepository repository = TaskRepository.getInstance();
         UserModel userModel = repository.UserLoggedIn();
         if (userModel != null){
@@ -62,4 +73,7 @@ public class MainActivity extends SingleFragmentActivity implements Connectivity
     public void onNetworkConnectionChanged(boolean isConnected) {
         Log.e("TAG4" , "MAin activity " + isConnected);
     }
+
+
+
 }

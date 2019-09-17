@@ -169,8 +169,6 @@ public class EditTaskFragment extends Fragment {
                 String date = dateBtn.getText().toString();
                 boolean isUpdate = false ;
 
-                Log.e("TAG4" , status);
-
                 if (!title.isEmpty() && !description.isEmpty() && !time.isEmpty() && !date.isEmpty() &&
                         !status.isEmpty()){
                     isUpdate = repository.updateTask(taskId , userId , title , description , status , date , time);

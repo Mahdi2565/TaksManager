@@ -60,10 +60,12 @@ public class Const {
     public static final String  ADD_FRAGMENT_USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.add.fragment.user.id.bundle.key";
     public static final String  TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.task.id.dialog.task.fragment.bundle.key";
     public static final String  TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.user.id.dialog.task.fragment.bundle.key";
+    public static final String  EDIT_PROFILE_BUNDLE_KEY = "ir.mahdidev.taksmanager.edit.profile.bundle.key";
     public static final String  EDIT_DIALOG_FRAGMENT_TAG = "ir.mahdidev.taksmanager.edit.dialog.fragment.tag";
     public static final String  ADD_DIALOG_FRAGMENT_TAG = "ir.mahdidev.taksmanager.add.dialog.fragment.tag";
     public static final String  DELETE_ALL_TASK_DIALOG_FRAGMENT_TAG = "ir.mahdidev.taksmanager.add.delete.all.task.dialog.fragment.tag";
     public static final String  ADD_FRAGMENT_TAG = "ir.mahdidev.taksmanager.add.fragment.tag";
+    public static final String  REGISTER_FRAGMENT_TAG = "ir.mahdidev.taksmanager.register.fragment.tag";
     public static final String  EDIT_FRAGMENT_TAG = "ir.mahdidev.taksmanager.edit.fragment.tag";
     public static final String  DATE_PICKER_FRAGMENT = "ir.mahdidev.taksmanager.date.picker.fragment";
     public static final String  DATE_PICKER_FRAGMENT_BUNDLE_KEY = "ir.mahdidev.taksmanager.date.picker.fragment.bundle.key";
