@@ -2,6 +2,7 @@ package ir.mahdidev.taksmanager.fragment;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -28,12 +29,15 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
+import ir.mahdidev.taksmanager.util.EventBusMessage;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
 /**
@@ -58,7 +62,6 @@ public class EditProfileFragment extends Fragment {
     public EditProfileFragment() {
 
     }
-
     public static EditProfileFragment newInstance(int userId) {
         Bundle args = new Bundle();
         args.putInt(Const.EDIT_PROFILE_BUNDLE_KEY , userId);
@@ -215,30 +218,19 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == getActivity().RESULT_OK){
-
             if (requestCode == Const.GET_IMAGE_REQUEST_CODE){
-
                 if (data != null) uriImage = data.getData();
-
                 String [] filePathArray = {MediaStore.Images.Media.DATA};
-
-                Cursor cursor = getActivity().getContentResolver().query(uriImage , filePathArray , null , null ,null);
-
+                Cursor cursor = getActivity().getContentResolver().query(uriImage , filePathArray
+                        , null , null ,null);
                 assert cursor != null;
                 cursor.moveToNext();
-
                 int columindex = cursor.getColumnIndex(filePathArray[0]);
-
                 String path = cursor.getString(columindex);
                 cursor.close();
-
                 userImage.setImageBitmap(BitmapFactory.decodeFile(path));
-
                 imageBitmap = BitmapFactory.decodeFile(path) ;
-
-
             }
         }
     }

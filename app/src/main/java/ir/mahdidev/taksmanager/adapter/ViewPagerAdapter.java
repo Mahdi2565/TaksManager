@@ -16,14 +16,16 @@ import ir.mahdidev.taksmanager.model.UserModel;
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private String[] status = {"TODO" , "DOING" , "DONE"};
     private int userId;
-    public ViewPagerAdapter(FragmentManager fm , int userId) {
+    private boolean isAdmin ;
+    public ViewPagerAdapter(FragmentManager fm , int userId , boolean isAdmin) {
         super(fm);
         this.userId = userId;
+        this.isAdmin = isAdmin;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return TaskFragment.newInstance(status[position] , userId);
+        return TaskFragment.newInstance(status[position] , userId , isAdmin);
     }
 
     @Override

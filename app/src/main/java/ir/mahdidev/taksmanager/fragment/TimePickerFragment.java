@@ -102,10 +102,8 @@ public class TimePickerFragment extends Fragment {
         SimpleDateFormat format = new SimpleDateFormat("hh:mm a" , Locale.US);
         try {
             time  = format.parse(this.timeReceive);
-            Log.e("TAG4" , "is not null");
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.e("TAG4" , "is null");
 
         }
 

@@ -124,8 +124,6 @@ public class TaskRepository {
         userModel.setIsLoggedIn(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_LOGGED_IN)));
         userModel.setIsAdmin(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_ADMIN)));
         userModel.setRegisterDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_REGISTER_DATE)));
-       // userModel.setImageUser(imageUser);
-     //   userModel.setImageUser(BitmapFactory.decodeByteArray(imageUser, 0, imageUser.length));
     }
 
     public ArrayList<TaskModel> readTask (String status , int userId){
@@ -150,10 +148,51 @@ public class TaskRepository {
         return taskList ;
     }
 
+    public ArrayList<TaskModel> readTask (String status){
+        ArrayList<TaskModel> taskList = new ArrayList<>();
+        Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_TASK + " " +
+                "WHERE " + Const.DB.TABLE_TASK_STATUS + " = " +"\"" + status + "\"" , null);
+        while (cursor.moveToNext()){
+            TaskModel taskModel = new TaskModel();
+            taskModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_ID)));
+            taskModel.setUserId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_USER_ID)));
+            taskModel.setTitle(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TITLE)));
+            taskModel.setDescription(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DESCRIPTION)));
+            taskModel.setStatus(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_STATUS)));
+            taskModel.setDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DATE)));
+            taskModel.setTime(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TIME)));
+            taskList.add(taskModel);
+        }
+        if (cursor != null){
+            cursor.close();
+        }
+        return taskList ;
+    }
+
     public TaskModel readTask ( int userId ,int taskId){
         Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_TASK + " " +
                 "WHERE " + Const.DB.TABLE_TASK_ID + " = " +taskId + " AND " +
                 Const.DB.TABLE_TASK_USER_ID + " = " + userId, null);
+        while (cursor.moveToNext()){
+            TaskModel taskModel = new TaskModel();
+            taskModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_ID)));
+            taskModel.setUserId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_USER_ID)));
+            taskModel.setTitle(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TITLE)));
+            taskModel.setDescription(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DESCRIPTION)));
+            taskModel.setStatus(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_STATUS)));
+            taskModel.setDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_DATE)));
+            taskModel.setTime(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_TASK_TIME)));
+            return taskModel;
+        }
+        if (cursor != null){
+            cursor.close();
+        }
+        return null ;
+    }
+
+    public TaskModel readTask (int taskId){
+        Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_TASK + " " +
+                "WHERE " + Const.DB.TABLE_TASK_ID + " = " +taskId , null);
         while (cursor.moveToNext()){
             TaskModel taskModel = new TaskModel();
             taskModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_TASK_ID)));
@@ -202,6 +241,21 @@ public class TaskRepository {
                 taskId + " AND " + Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
         return isUpdate;
     }
+
+    public boolean updateTask( int taskId , String title , String description ,
+                              String status , String date , String time){
+        boolean isUpdate ;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Const.DB.TABLE_TASK_TITLE , title);
+        contentValues.put(Const.DB.TABLE_TASK_DESCRIPTION , description);
+        contentValues.put(Const.DB.TABLE_TASK_STATUS , status);
+        contentValues.put(Const.DB.TABLE_TASK_DATE , date);
+        contentValues.put(Const.DB.TABLE_TASK_TIME , time);
+
+        isUpdate =G.DB.update(Const.DB.DB_TABLE_TASK , contentValues , Const.DB.TABLE_TASK_ID + " = " +
+                taskId , null) > 0;
+        return isUpdate;
+    }
     public boolean deleteTask (int taskId , int userId){
         boolean isDeleted ;
        isDeleted = G.DB.delete(Const.DB.DB_TABLE_TASK , Const.DB.TABLE_TASK_ID + " = " + taskId +" " +
@@ -214,7 +268,6 @@ public class TaskRepository {
         isDeleted = G.DB.delete(Const.DB.DB_TABLE_TASK ,  Const.DB.TABLE_TASK_USER_ID + " = " + userId , null) > 0;
         return isDeleted ;
     }
-
     public UserModel readUserProfile(int userId){
         Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_USER + " WHERE "
         + Const.DB.TABLE_USER_ID + " = " + userId , null);
@@ -236,6 +289,38 @@ public class TaskRepository {
             return userModel ;
         }
         return null ;
+    }
+
+    public ArrayList<UserModel> readListUserProfile(){
+
+        Cursor cursor = G.DB.rawQuery("SELECT * FROM " + Const.DB.DB_TABLE_USER ,null);
+        ArrayList<UserModel> userList = new ArrayList<>();
+        while (cursor.moveToNext()){
+            UserModel userModel = new UserModel();
+            userModel.setId(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_ID)));
+            userModel.setUserName(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_USERNAME)));
+            userModel.setPassword(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_PASSWORD)));
+            userModel.setAge(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_AGE)));
+            userModel.setEmail(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_EMAIL)));
+            userModel.setIsLoggedIn(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_LOGGED_IN)));
+            userModel.setIsAdmin(cursor.getInt(cursor.getColumnIndex(Const.DB.TABLE_USER_IS_ADMIN)));
+            userModel.setRegisterDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_REGISTER_DATE)));
+            userModel.setImageUser(cursor.getBlob(cursor.getColumnIndex(Const.DB.TABLE_USER_IMAGE)));
+            userList.add(userModel) ;
+        }
+        if (cursor != null){
+            cursor.close();
+        }
+        return userList;
+    }
+
+    public int getProfilesCount(int userId) {
+        String countQuery = "SELECT  * FROM " + Const.DB.DB_TABLE_TASK + " WHERE "
+                + Const.DB.TABLE_TASK_USER_ID + " = " + userId ;
+        Cursor cursor = G.DB.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
     }
 
     public boolean updateUser(int userId  , String password , String email ,

@@ -54,7 +54,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             String time = taskList.get(position).getDate() + " " + taskList.get(position).getTime();
             titleTask.setText(taskList.get(position).getTitle());
             dateTask.setText(time);
-            firstCharacterTitle.setText(taskList.get(position).getTitle().substring(0 , 1));
+            firstCharacterTitle.setText(taskList.get(position).getTitle().substring(0 , 1).toUpperCase());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

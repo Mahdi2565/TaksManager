@@ -29,13 +29,15 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
     private int modeTask ;
     private int taskId   ;
     private int userId   ;
+    private boolean isAdmin ;
 
-    public static TaskDialogFragment newInstance(int mode , int taskId , int userId) {
+    public static TaskDialogFragment newInstance(int mode , int taskId , int userId , boolean isAdmin) {
 
         Bundle args = new Bundle();
         args.putInt(Const.MODE_TASK_BUNDLE_KEY, mode);
         args.putInt(Const.TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
         args.putInt(Const.TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
+        args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY , isAdmin);
         TaskDialogFragment fragment = new TaskDialogFragment();
         fragment.setArguments(args);
         return fragment;
@@ -49,6 +51,7 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
             modeTask = bundle.getInt(Const.MODE_TASK_BUNDLE_KEY);
             taskId   = bundle.getInt(Const.TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY, Const.TASK_DIALOG_DEFAULT_TASK_ID);
             userId   = bundle.getInt(Const.TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY , Const.TASK_DIALOG_DEFAULT_USER_ID);
+            isAdmin  = bundle.getBoolean(Const.IS_ADMIN_BUNDLE_KEY);
         }
     }
 
@@ -71,7 +74,7 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
 
         }else if (modeTask == Const.EDIT_TASK_MODE){
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(taskId , userId);
+            EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(taskId , userId , isAdmin);
             transaction.replace(R.id.frame_layout, editTaskFragment);
             transaction.commit();
         } else if (modeTask == Const.DELETE_TASK_MODE){

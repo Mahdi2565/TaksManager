@@ -52,6 +52,7 @@ public class EditTaskFragment extends Fragment {
     private TaskModel taskModel;
     private int userId ;
     private int taskId;
+    private boolean isAdmin ;
     private Date dateReceive ;
     private Date timeReceive ;
     private boolean isEditable = false ;
@@ -59,11 +60,12 @@ public class EditTaskFragment extends Fragment {
     public EditTaskFragment() {
     }
 
-    public static EditTaskFragment newInstance(int taskId , int userId) {
+    public static EditTaskFragment newInstance(int taskId , int userId , boolean isAdmin) {
 
         Bundle args = new Bundle();
         args.putInt(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
         args.putInt(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
+        args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY , isAdmin);
         EditTaskFragment fragment = new EditTaskFragment();
         fragment.setArguments(args);
         return fragment;
@@ -82,6 +84,7 @@ public class EditTaskFragment extends Fragment {
         if (bundle != null){
             userId = bundle.getInt(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY);
             taskId = bundle.getInt(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY);
+            isAdmin = bundle.getBoolean(Const.IS_ADMIN_BUNDLE_KEY);
         }
     }
 
@@ -171,7 +174,11 @@ public class EditTaskFragment extends Fragment {
 
                 if (!title.isEmpty() && !description.isEmpty() && !time.isEmpty() && !date.isEmpty() &&
                         !status.isEmpty()){
-                    isUpdate = repository.updateTask(taskId , userId , title , description , status , date , time);
+                    if (isAdmin){
+                        isUpdate = repository.updateTask(taskId  , title , description , status , date , time);
+                    }else {
+                        isUpdate = repository.updateTask(taskId , userId , title , description , status , date , time);
+                    }
                 }else {
                     Toast.makeText(getActivity() , "Please Fill the fields" , Toast.LENGTH_SHORT).show();
                 }
@@ -274,7 +281,11 @@ public class EditTaskFragment extends Fragment {
     }
 
     private void readTaskFromDb() {
-    taskModel = repository.readTask(userId , taskId);
+        if (isAdmin){
+            taskModel = repository.readTask(taskId);
+        }else {
+            taskModel = repository.readTask(userId , taskId);
+        }
     }
 
     private void initViews(View v) {

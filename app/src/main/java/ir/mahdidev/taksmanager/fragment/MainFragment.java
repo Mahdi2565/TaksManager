@@ -44,8 +44,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private com.github.clans.fab.FloatingActionButton removeTasks ;
     private com.github.clans.fab.FloatingActionButton editProfile ;
     private FloatingActionMenu fab_menu;
+
+
     public MainFragment() {
-        // Required empty public constructor
     }
     public static MainFragment newInstance(UserModel userModel) {
         Bundle args = new Bundle();
@@ -114,7 +115,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()){
             case R.id.add_task :{
                 TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.Add_TASK_MODE , Const.TASK_DIALOG_DEFAULT_TASK_ID
-                        , userModel.getId());
+                        , userModel.getId() , userModel.getIsAdmin()==1);
                 dialogFragment.setTargetFragment(MainFragment.this , Const.TARGET_REQUSET_CODE_MAIN_FRAGMENT);
                 dialogFragment.show(getFragmentManager() , Const.ADD_DIALOG_FRAGMENT_TAG);
                 fab_menu.close(true);
@@ -122,7 +123,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             }
             case R.id.remove_tasks : {
                 TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.DELETE_TASK_MODE , Const.TASK_DIALOG_DEFAULT_TASK_ID
-                        , userModel.getId());
+                        , userModel.getId(), userModel.getIsAdmin()==1);
                 dialogFragment.setTargetFragment(MainFragment.this , Const.TARGET_REQUSET_CODE_MAIN_FRAGMENT);
                 dialogFragment.show(getFragmentManager() , Const.DELETE_ALL_TASK_DIALOG_FRAGMENT_TAG);
                 fab_menu.close(true);
@@ -137,7 +138,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
     private void initViewPagerAndTablayout() {
 
-        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager() , userModel.getId());
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager() , userModel.getId()
+                , userModel.getIsAdmin() == 1);
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setOffscreenPageLimit(3);
         tableLayout.setupWithViewPager(viewPager);

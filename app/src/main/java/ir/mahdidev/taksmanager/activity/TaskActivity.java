@@ -17,19 +17,22 @@ import android.widget.TextView;
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.fragment.EditProfileFragment;
 import ir.mahdidev.taksmanager.fragment.MainFragment;
+import ir.mahdidev.taksmanager.fragment.UserProfileListFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.G;
 import ir.mahdidev.taksmanager.util.TaskRepository;
 
-public class TaskActivity extends SingleFragmentActivity implements  ConnectivityReceiver.ConnectivityReceiverListener , MainFragment.MainFragmentInterface {
+public class TaskActivity extends SingleFragmentActivity implements
+        ConnectivityReceiver.ConnectivityReceiverListener , MainFragment.MainFragmentInterface {
 
     private Toolbar toolbar;
     private TextView titleToolbar;
     private TaskRepository repository = TaskRepository.getInstance();
     private ImageView logOut;
     private UserModel userModel ;
+    private ImageView users_profile ;
 
 
     @Override
@@ -55,6 +58,18 @@ public class TaskActivity extends SingleFragmentActivity implements  Connectivit
                 logoutFunction();
             }
         });
+        if (userModel.getIsAdmin()==1){
+            users_profile.setVisibility(View.VISIBLE);
+            users_profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UserProfileListFragment userProfileListFragment = UserProfileListFragment.newInstance();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout ,userProfileListFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+        }
     }
 
     private void changeStatusBarColor() {
@@ -72,6 +87,7 @@ public class TaskActivity extends SingleFragmentActivity implements  Connectivit
         toolbar      = findViewById(R.id.toolbar);
         titleToolbar = findViewById(R.id.title_toolbar);
         logOut  = findViewById(R.id.log_out);
+        users_profile = findViewById(R.id.users_profile);
     }
 
     private void setToolbarTitle() {

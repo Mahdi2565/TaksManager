@@ -40,6 +40,7 @@ public class TaskFragment extends Fragment {
 
     private String status;
     private int userId;
+    private boolean isAdmin ;
     private ArrayList<TaskModel> taskList ;
     private TaskRepository repository = TaskRepository.getInstance();
     private RecyclerView taskFragmentRecyclerView;
@@ -49,10 +50,11 @@ public class TaskFragment extends Fragment {
     public TaskFragment() {
     }
 
-    public static TaskFragment newInstance(String status , int userId) {
+    public static TaskFragment newInstance(String status , int userId , boolean isAdmin) {
         Bundle args = new Bundle();
         args.putString(Const.STATUS_BUNDLE_KEY , status);
         args.putInt(Const.USER_ID_BUNDLE_KEY , userId);
+        args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY , isAdmin);
         TaskFragment fragment = new TaskFragment();
         fragment.setArguments(args);
         return fragment;
@@ -80,12 +82,17 @@ public class TaskFragment extends Fragment {
         if (bundle != null) {
             status = bundle.getString(Const.STATUS_BUNDLE_KEY);
             userId = bundle.getInt(Const.USER_ID_BUNDLE_KEY);
+            isAdmin = bundle.getBoolean(Const.IS_ADMIN_BUNDLE_KEY);
         }
     }
 
     private void readDatabase() {
         taskList = new ArrayList<>();
-        taskList = repository.readTask(status , userId);
+        if (isAdmin){
+            taskList = repository.readTask(status);
+        }else {
+            taskList = repository.readTask(status , userId);
+        }
     }
 
     @Override
@@ -119,7 +126,7 @@ public class TaskFragment extends Fragment {
         recyclerViewAdapter.setTaskRecyclerViewInterface(new TaskRecyclerViewAdapter.TaskRecyclerViewInterface() {
             @Override
             public void onReceive(int taskId , int UserId) {
-                TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.EDIT_TASK_MODE , taskId , userId);
+                TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.EDIT_TASK_MODE , taskId , userId , isAdmin);
                 dialogFragment.setTargetFragment(TaskFragment.this , Const.TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT);
                 dialogFragment.show(getFragmentManager() , Const.EDIT_DIALOG_FRAGMENT_TAG);
             }

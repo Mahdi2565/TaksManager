@@ -24,7 +24,7 @@
             <TextView
                 android:textColor="@color/colorWhite"
                 android:gravity="center_vertical"
-                android:id="@+id/first_character_title"
+                android:id="@+id/task_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -43,7 +43,7 @@
             <TextView
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:id="@+id/title_task"
+                android:id="@+id/user_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -55,9 +55,9 @@
 
             <TextView
                 android:layout_alignParentEnd="true"
-                android:layout_below="@id/title_task"
+                android:layout_below="@id/user_username"
                 android:textSize="12sp"
-                android:id="@+id/date_task"
+                android:id="@+id/date_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
