@@ -27,16 +27,16 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
 , EditTaskFragment.EditFragmentInterface , DeleteAllTasksFragment.DeleteAllTaskFragmentInterface {
 
     private int modeTask ;
-    private int taskId   ;
-    private int userId   ;
+    private long taskId   ;
+    private long userId   ;
     private boolean isAdmin ;
 
-    public static TaskDialogFragment newInstance(int mode , int taskId , int userId , boolean isAdmin) {
+    public static TaskDialogFragment newInstance(int mode , long taskId , long userId , boolean isAdmin) {
 
         Bundle args = new Bundle();
         args.putInt(Const.MODE_TASK_BUNDLE_KEY, mode);
-        args.putInt(Const.TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
-        args.putInt(Const.TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
+        args.putLong(Const.TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
+        args.putLong(Const.TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
         args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY , isAdmin);
         TaskDialogFragment fragment = new TaskDialogFragment();
         fragment.setArguments(args);
@@ -49,8 +49,8 @@ public class TaskDialogFragment extends DialogFragment implements AddTaskFragmen
         Bundle bundle = getArguments();
         if (bundle != null){
             modeTask = bundle.getInt(Const.MODE_TASK_BUNDLE_KEY);
-            taskId   = bundle.getInt(Const.TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY, Const.TASK_DIALOG_DEFAULT_TASK_ID);
-            userId   = bundle.getInt(Const.TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY , Const.TASK_DIALOG_DEFAULT_USER_ID);
+            taskId   = bundle.getLong(Const.TASK_DIALOG_FRAGMENT_TASK_ID_BUNDLE_KEY, Const.TASK_DIALOG_DEFAULT_TASK_ID);
+            userId   = bundle.getLong(Const.TASK_DIALOG_FRAGMENT_USER_ID_BUNDLE_KEY , Const.TASK_DIALOG_DEFAULT_USER_ID);
             isAdmin  = bundle.getBoolean(Const.IS_ADMIN_BUNDLE_KEY);
         }
     }

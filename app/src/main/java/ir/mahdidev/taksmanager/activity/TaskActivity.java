@@ -22,7 +22,7 @@ import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.G;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 public class TaskActivity extends SingleFragmentActivity implements
         ConnectivityReceiver.ConnectivityReceiverListener , MainFragment.MainFragmentInterface {
@@ -45,6 +45,7 @@ public class TaskActivity extends SingleFragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+      //  SQLiteStudioService.instance().start(this);
         initViews();
         setToolbarTitle();
         initToolbar();
@@ -63,10 +64,13 @@ public class TaskActivity extends SingleFragmentActivity implements
             users_profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UserProfileListFragment userProfileListFragment = UserProfileListFragment.newInstance();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout ,userProfileListFragment)
-                            .addToBackStack(null)
-                            .commit();
+                    UserProfileListFragment userProfileListFragment = UserProfileListFragment.newInstance(userModel.getId());
+                    if (getSupportFragmentManager().findFragmentByTag(Const.USER_PROFILE_LIST_TAG) != userProfileListFragment){
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout
+                                ,userProfileListFragment , Const.USER_PROFILE_LIST_TAG)
+                                .addToBackStack(null)
+                                .commit();
+                    }
                 }
             });
         }
@@ -121,13 +125,20 @@ public class TaskActivity extends SingleFragmentActivity implements
 
 
     @Override
-    public void onReceive() {
+    public void onEditProfileClicked() {
         EditProfileFragment editProfile = EditProfileFragment.newInstance(userModel.getId());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout , editProfile)
                 .addToBackStack(null)
                 .commit();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+    //    SQLiteStudioService.instance().stop();
+        super.onDestroy();
 
     }
 }

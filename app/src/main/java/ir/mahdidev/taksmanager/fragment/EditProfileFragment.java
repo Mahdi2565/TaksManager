@@ -2,7 +2,6 @@ package ir.mahdidev.taksmanager.fragment;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,22 +29,20 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
-import org.greenrobot.eventbus.EventBus;
-
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
-import ir.mahdidev.taksmanager.util.EventBusMessage;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EditProfileFragment extends Fragment {
-    private int userId ;
+    private long userId ;
     private UserModel userModel;
     private TaskRepository repository = TaskRepository.getInstance();
     private TextInputEditText userNameEdt;
@@ -62,9 +60,9 @@ public class EditProfileFragment extends Fragment {
     public EditProfileFragment() {
 
     }
-    public static EditProfileFragment newInstance(int userId) {
+    public static EditProfileFragment newInstance(long userId) {
         Bundle args = new Bundle();
-        args.putInt(Const.EDIT_PROFILE_BUNDLE_KEY , userId);
+        args.putLong(Const.EDIT_PROFILE_BUNDLE_KEY , userId);
         EditProfileFragment fragment = new EditProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -75,7 +73,7 @@ public class EditProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null){
-            userId = bundle.getInt(Const.EDIT_PROFILE_BUNDLE_KEY);
+            userId = bundle.getLong(Const.EDIT_PROFILE_BUNDLE_KEY);
         }
     }
 
@@ -98,9 +96,14 @@ public class EditProfileFragment extends Fragment {
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isPermisionGranted = checkPermision();
-                if (!isPermisionGranted) {
-                    Toast.makeText(getActivity() , getResources().getString(R.string.no_permision_image_user) , Toast.LENGTH_SHORT).show();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                    isPermisionGranted = checkPermision();
+                    if (!isPermisionGranted) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.no_permision_image_user), Toast.LENGTH_SHORT).show();
+                    } else {
+                        getImageFromGalary();
+                    }
                 }else {
                     getImageFromGalary();
                 }
@@ -117,6 +120,7 @@ public class EditProfileFragment extends Fragment {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String username = userNameEdt.getText().toString();
                 String password = passwordEdt.getText().toString().trim();
                 String email    = emailEdt.getText().toString().trim();
                 String age      = ageEdt.getText().toString().trim();
@@ -142,8 +146,8 @@ public class EditProfileFragment extends Fragment {
 
                     return;
                 }
-                isUpdate  = repository.updateUser(userModel.getId() , password , email , age , isAdmin
-                 , imageBitmap );
+                isUpdate  = repository.updateUser( setUserModel(userId , username,password , email , age, isAdmin , imageBitmap
+                , userModel.getRegisterDate()));
                 if (isUpdate){
                     Toast.makeText(getActivity() , "Update User Successfully" , Toast.LENGTH_SHORT).show();
                     if (getFragmentManager() != null) {
@@ -233,6 +237,21 @@ public class EditProfileFragment extends Fragment {
                 imageBitmap = BitmapFactory.decodeFile(path) ;
             }
         }
+    }
+
+    private UserModel setUserModel(long userId  ,String username, String password , String email ,
+                                   String age , boolean admin , Bitmap imageUser , String registerDate ) {
+        byte[] image = repository.getBitmapAsByteArray(imageUser);
+        UserModel userModel = new UserModel();
+        userModel.setId(userId);
+        userModel.setIsAdmin(admin?1:0);
+        userModel.setImageUser(image);
+        userModel.setUserName(username);
+        userModel.setPassword(password);
+        userModel.setEmail(email);
+        userModel.setAge(age);
+        userModel.setRegisterDate(registerDate);
+        return userModel ;
     }
 
 }

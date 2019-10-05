@@ -18,24 +18,24 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.mikhaellopez.circularimageview.CircularImageView;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ir.mahdidev.taksmanager.R;
+import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +52,7 @@ public class RegisterFragment extends Fragment {
     private boolean isPermisionGranted ;
     private Uri uriImage;
     private Bitmap imageBitmap = null ;
+    private TaskRepository repository = TaskRepository.getInstance();
 
 
     public RegisterFragment() {
@@ -82,9 +83,13 @@ public class RegisterFragment extends Fragment {
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isPermisionGranted = checkPermision();
-                if (!isPermisionGranted) {
-                    Toast.makeText(getActivity() , getResources().getString(R.string.no_permision_image_user) , Toast.LENGTH_SHORT).show();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    isPermisionGranted = checkPermision();
+                    if (!isPermisionGranted) {
+                        Toast.makeText(getActivity() , getResources().getString(R.string.no_permision_image_user) , Toast.LENGTH_SHORT).show();
+                    }else {
+                        getImageFromGalary();
+                    }
                 }else {
                     getImageFromGalary();
                 }
@@ -99,7 +104,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void signUpFunction() {
-        final TaskRepository repository = TaskRepository.getInstance();
+
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +113,8 @@ public class RegisterFragment extends Fragment {
             String email    = emailEdt.getText().toString().trim();
             String age      = ageEdt.getText().toString().trim();
             boolean isAdmin = isAdminCheckBox.isChecked();
+
+
 
                 if (!(userName.length()> 6)){
                     Toast.makeText(getActivity() , "Invalid user !" , Toast.LENGTH_SHORT ).show();
@@ -141,8 +148,9 @@ public class RegisterFragment extends Fragment {
 
                    imageBitmap = BitmapFactory.decodeResource(getResources(),R.drawable.user_png_white);
                 }
-                boolean isInsertToDb =  repository.insertUserToDb(userName , password
-                , email , age, isAdmin , imageBitmap);
+
+                boolean isInsertToDb =  repository.insertUserToDb(setUserModel(userName , password
+                        , email , age, isAdmin , imageBitmap));
                 if (isInsertToDb)
                     if (getFragmentManager() != null ) {
                     getFragmentManager().popBackStack();
@@ -150,6 +158,20 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+    }
+
+    private UserModel setUserModel(String userName, String password, String email, String age, boolean isAdmin, Bitmap imageBitmap) {
+        Date date = new Date();
+        byte[] image = repository.getBitmapAsByteArray(imageBitmap);
+        UserModel userModel = new UserModel();
+        userModel.setIsAdmin(isAdmin?1:0);
+        userModel.setImageUser(image);
+        userModel.setUserName(userName);
+        userModel.setPassword(password);
+        userModel.setEmail(email);
+        userModel.setAge(age);
+        userModel.setRegisterDate(date.toString());
+        return userModel ;
     }
 
     private void initViews(View view) {

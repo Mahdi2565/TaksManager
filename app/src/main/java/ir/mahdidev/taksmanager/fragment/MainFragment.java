@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.tabs.TabLayout;
@@ -29,12 +28,11 @@ import ir.mahdidev.taksmanager.adapter.ViewPagerAdapter;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.EventBusMessage;
-import ir.mahdidev.taksmanager.util.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements View.OnClickListener {
+public class MainFragment extends Fragment implements View.OnClickListener , TaskFragment.TaskFragmentInterface {
 
     private UserModel userModel;
     private TabLayout tableLayout;
@@ -48,6 +46,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     public MainFragment() {
     }
+
     public static MainFragment newInstance(UserModel userModel) {
         Bundle args = new Bundle();
         args.putSerializable(Const.USER_MODEL_LOGGED_IN_MAIN_FRAGMENT_BUNDLE_KEY , userModel);
@@ -130,7 +129,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 break;
             }
             case R.id.edit_profile : {
-                mainFragmentInterface.onReceive();
+                mainFragmentInterface.onEditProfileClicked();
                 fab_menu.close(true);
                 break;
             }
@@ -164,8 +163,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
     }
     public MainFragmentInterface mainFragmentInterface ;
+
+    @Override
+    public void onArriveBottom() {
+        fab_menu.hideMenu(true);
+    }
+    @Override
+    public void showFab() {
+        fab_menu.showMenu(true);
+    }
+
     public interface MainFragmentInterface{
-        void onReceive();
+        void onEditProfileClicked();
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)

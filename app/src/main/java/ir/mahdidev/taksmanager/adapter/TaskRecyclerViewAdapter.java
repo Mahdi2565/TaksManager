@@ -65,7 +65,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     }
     public TaskRecyclerViewInterface taskRecyclerViewInterface;
     public interface TaskRecyclerViewInterface{
-        void onReceive(int taskId , int userId);
+        void onReceive(long taskId , long userId);
     }
     public void setTaskRecyclerViewInterface (TaskRecyclerViewInterface taskRecyclerViewInterface){
         this.taskRecyclerViewInterface = taskRecyclerViewInterface;

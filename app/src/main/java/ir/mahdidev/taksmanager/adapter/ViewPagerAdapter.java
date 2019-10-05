@@ -15,9 +15,9 @@ import ir.mahdidev.taksmanager.model.UserModel;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private String[] status = {"TODO" , "DOING" , "DONE"};
-    private int userId;
+    private long userId;
     private boolean isAdmin ;
-    public ViewPagerAdapter(FragmentManager fm , int userId , boolean isAdmin) {
+    public ViewPagerAdapter(FragmentManager fm , long userId , boolean isAdmin) {
         super(fm);
         this.userId = userId;
         this.isAdmin = isAdmin;

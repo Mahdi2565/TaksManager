@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    app:cardElevation="4dp"
-    app:cardCornerRadius="4dp"
-    app:cardUseCompatPadding="true"
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/view_background"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_row_background">
+
+            <ImageView
+                android:id="@+id/delete_icon"
+                android:layout_width="@dimen/ic_delete"
+                android:layout_height="@dimen/ic_delete"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/padd_10"
+                android:src="@drawable/ic_delete"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/padd_10" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/padd_10"
+                android:layout_toLeftOf="@id/delete_icon"
+                android:text="@string/delete_btn"
+                android:textColor="#fff"
+                android:textSize="13dp"
+                android:layout_marginEnd="@dimen/padd_10"
+                android:layout_toStartOf="@id/delete_icon" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/view_foreground"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -68,5 +114,6 @@
         </RelativeLayout>
 
     </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-</androidx.cardview.widget.CardView>
+</FrameLayout>

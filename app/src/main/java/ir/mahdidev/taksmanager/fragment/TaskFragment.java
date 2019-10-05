@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +24,11 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import ir.mahdidev.taksmanager.R;
-import ir.mahdidev.taksmanager.activity.TaskActivity;
 import ir.mahdidev.taksmanager.adapter.TaskRecyclerViewAdapter;
 import ir.mahdidev.taksmanager.model.TaskModel;
-import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.EventBusMessage;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,7 +36,7 @@ import ir.mahdidev.taksmanager.util.TaskRepository;
 public class TaskFragment extends Fragment {
 
     private String status;
-    private int userId;
+    private long userId;
     private boolean isAdmin ;
     private ArrayList<TaskModel> taskList ;
     private TaskRepository repository = TaskRepository.getInstance();
@@ -50,14 +47,26 @@ public class TaskFragment extends Fragment {
     public TaskFragment() {
     }
 
-    public static TaskFragment newInstance(String status , int userId , boolean isAdmin) {
+    public static TaskFragment newInstance(String status , long userId , boolean isAdmin) {
         Bundle args = new Bundle();
         args.putString(Const.STATUS_BUNDLE_KEY , status);
-        args.putInt(Const.USER_ID_BUNDLE_KEY , userId);
+        args.putLong(Const.USER_ID_BUNDLE_KEY , userId);
         args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY , isAdmin);
         TaskFragment fragment = new TaskFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        taskFragmentInterface = (TaskFragmentInterface) getParentFragment() ;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        taskFragmentInterface = null;
     }
 
     @Override
@@ -81,7 +90,7 @@ public class TaskFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             status = bundle.getString(Const.STATUS_BUNDLE_KEY);
-            userId = bundle.getInt(Const.USER_ID_BUNDLE_KEY);
+            userId = bundle.getLong(Const.USER_ID_BUNDLE_KEY);
             isAdmin = bundle.getBoolean(Const.IS_ADMIN_BUNDLE_KEY);
         }
     }
@@ -119,14 +128,18 @@ public class TaskFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 if (!recyclerView.canScrollVertically(1)) {
                 //TODO: pass arrived bottom to activity for hide fab
+                   // taskFragmentInterface.onArriveBottom();
                 }else {
+                //    taskFragmentInterface.showFab();
                 }
             }
         });
         recyclerViewAdapter.setTaskRecyclerViewInterface(new TaskRecyclerViewAdapter.TaskRecyclerViewInterface() {
             @Override
-            public void onReceive(int taskId , int UserId) {
-                TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.EDIT_TASK_MODE , taskId , userId , isAdmin);
+            public void onReceive(long taskId , long UserId) {
+                Log.e("TAG4" , "user " + UserId + " task " + taskId);
+
+                TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.EDIT_TASK_MODE , taskId , UserId , isAdmin);
                 dialogFragment.setTargetFragment(TaskFragment.this , Const.TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT);
                 dialogFragment.show(getFragmentManager() , Const.EDIT_DIALOG_FRAGMENT_TAG);
             }
@@ -155,6 +168,12 @@ public class TaskFragment extends Fragment {
             recyclerViewAdapter.notifyDataSetChanged();
             checkExistTask();
         }
+    }
+
+    public TaskFragmentInterface taskFragmentInterface;
+    public interface TaskFragmentInterface{
+        void onArriveBottom();
+        void showFab();
     }
 
 }

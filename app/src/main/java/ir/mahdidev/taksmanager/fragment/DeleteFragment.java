@@ -2,7 +2,6 @@ package ir.mahdidev.taksmanager.fragment;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,7 @@ import com.google.android.material.button.MaterialButton;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.util.Const;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,18 +26,18 @@ public class DeleteFragment extends Fragment {
 
     private MaterialButton deleteBtn;
     private MaterialButton cancelBtn;
-    private int taskId ;
-    private int userId ;
+    private long taskId ;
+    private long userId ;
     private TaskRepository repository = TaskRepository.getInstance();
 
     public DeleteFragment() {
     }
 
-    public static DeleteFragment newInstance(int taskId, int userId) {
+    public static DeleteFragment newInstance(long taskId, long userId) {
 
         Bundle args = new Bundle();
-        args.putInt(Const.DELETE_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
-        args.putInt(Const.DELETE_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
+        args.putLong(Const.DELETE_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
+        args.putLong(Const.DELETE_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
         DeleteFragment fragment = new DeleteFragment();
         fragment.setArguments(args);
         return fragment;
@@ -50,8 +48,8 @@ public class DeleteFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            taskId = bundle.getInt(Const.DELETE_FRAGMENT_TASK_ID_BUNDLE_KEY);
-            userId = bundle.getInt(Const.DELETE_FRAGMENT_USER_ID_BUNDLE_KEY);
+            taskId = bundle.getLong(Const.DELETE_FRAGMENT_TASK_ID_BUNDLE_KEY);
+            userId = bundle.getLong(Const.DELETE_FRAGMENT_USER_ID_BUNDLE_KEY);
         }
     }
 

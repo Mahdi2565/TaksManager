@@ -29,7 +29,7 @@ import java.util.Locale;
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.util.Const;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,8 +50,8 @@ public class EditTaskFragment extends Fragment {
     private String status ;
     private TaskRepository repository = TaskRepository.getInstance();
     private TaskModel taskModel;
-    private int userId ;
-    private int taskId;
+    private long userId ;
+    private long taskId;
     private boolean isAdmin ;
     private Date dateReceive ;
     private Date timeReceive ;
@@ -60,11 +60,11 @@ public class EditTaskFragment extends Fragment {
     public EditTaskFragment() {
     }
 
-    public static EditTaskFragment newInstance(int taskId , int userId , boolean isAdmin) {
+    public static EditTaskFragment newInstance(long taskId , long userId , boolean isAdmin) {
 
         Bundle args = new Bundle();
-        args.putInt(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
-        args.putInt(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
+        args.putLong(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
+        args.putLong(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
         args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY , isAdmin);
         EditTaskFragment fragment = new EditTaskFragment();
         fragment.setArguments(args);
@@ -82,8 +82,8 @@ public class EditTaskFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null){
-            userId = bundle.getInt(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY);
-            taskId = bundle.getInt(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY);
+            userId = bundle.getLong(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY);
+            taskId = bundle.getLong(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY);
             isAdmin = bundle.getBoolean(Const.IS_ADMIN_BUNDLE_KEY);
         }
     }
@@ -174,11 +174,7 @@ public class EditTaskFragment extends Fragment {
 
                 if (!title.isEmpty() && !description.isEmpty() && !time.isEmpty() && !date.isEmpty() &&
                         !status.isEmpty()){
-                    if (isAdmin){
-                        isUpdate = repository.updateTask(taskId  , title , description , status , date , time);
-                    }else {
-                        isUpdate = repository.updateTask(taskId , userId , title , description , status , date , time);
-                    }
+                        isUpdate = repository.updateTask(setTaskModel(taskId  , title , description , status , date , time));
                 }else {
                     Toast.makeText(getActivity() , "Please Fill the fields" , Toast.LENGTH_SHORT).show();
                 }
@@ -318,6 +314,16 @@ public class EditTaskFragment extends Fragment {
         }else if (requestCode == Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT){
             editFragmentInterface.onEditTaskClicked();
         }
+    }
+    private TaskModel setTaskModel(long taskId, String title, String description, String status, String date, String time) {
+        TaskModel taskModel = new TaskModel();
+        taskModel.setId(taskId);
+        taskModel.setTitle(title);
+        taskModel.setDescription(description);
+        taskModel.setStatus(status);
+        taskModel.setDate(date);
+        taskModel.setTime(time);
+        return taskModel;
     }
 
     @Override

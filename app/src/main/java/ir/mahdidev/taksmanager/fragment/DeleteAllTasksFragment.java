@@ -1,16 +1,13 @@
 package ir.mahdidev.taksmanager.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +17,7 @@ import com.google.android.material.button.MaterialButton;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.util.Const;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,15 +26,15 @@ public class DeleteAllTasksFragment extends Fragment {
 
     private MaterialButton deleteBtn;
     private MaterialButton cancelBtn;
-    private int userId ;
+    private long userId ;
     private TaskRepository repository = TaskRepository.getInstance();
     public DeleteAllTasksFragment() {
         // Required empty public constructor
     }
 
-    public static DeleteAllTasksFragment newInstance(int userId) {
+    public static DeleteAllTasksFragment newInstance(long userId) {
         Bundle args = new Bundle();
-        args.putInt(Const.DELETE_ALL_TASK_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
+        args.putLong(Const.DELETE_ALL_TASK_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
         DeleteAllTasksFragment fragment = new DeleteAllTasksFragment();
         fragment.setArguments(args);
         return fragment;
@@ -54,7 +51,7 @@ public class DeleteAllTasksFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            userId = bundle.getInt(Const.DELETE_ALL_TASK_FRAGMENT_USER_ID_BUNDLE_KEY);
+            userId = bundle.getLong(Const.DELETE_ALL_TASK_FRAGMENT_USER_ID_BUNDLE_KEY);
         }
     }
     @Override

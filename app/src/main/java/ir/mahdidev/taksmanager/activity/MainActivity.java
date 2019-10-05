@@ -17,7 +17,7 @@ import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.G;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 public class MainActivity extends SingleFragmentActivity implements ConnectivityReceiver.ConnectivityReceiverListener {
 

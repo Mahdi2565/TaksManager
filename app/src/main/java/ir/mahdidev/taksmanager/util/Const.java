@@ -51,6 +51,8 @@ public class Const {
                 ;
     }
     public static final String  USER_PROFILE_BUNDLE_KEY = "ir.mahdidev.taksmanager.user.profile.bundle.key";
+    public static final String  USER_PROFILE_LIST_TAG= "ir.mahdidev.taksmanager.user.profile.list.tag";
+    public static final String  USER_PROFILE_LIST_BUNDLE_KEY= "ir.mahdidev.taksmanager.user.profile.list.bundle.key";
     public static final String  USER_MODEL_LOGGED_IN_INTENT_KEY = "ir.mahdidev.taksmanager.usermodel.task.activity.intent.key";
     public static final String  USER_MODEL_LOGGED_IN_MAIN_FRAGMENT_BUNDLE_KEY = "ir.mahdidev.taksmanager.usermodel.main.fragment.bundle.key";
     public static final String  STATUS_BUNDLE_KEY = "ir.mahdidev.taksmanager.status.bundle.key";

@@ -26,8 +26,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import ir.mahdidev.taksmanager.R;
+import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.util.Const;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +43,7 @@ public class AddTaskFragment extends Fragment  {
     private MaterialButton cancelBtn ;
     private ChipGroup chipGroup;
     private String status = "";
-    private int userId ;
+    private long userId ;
     private AddFragmentInterface addFragmentInterface;
     private Date dateReceive = null;
     private Date timeReceive = null;
@@ -52,9 +53,9 @@ public class AddTaskFragment extends Fragment  {
 
     }
 
-    public static AddTaskFragment newInstance(int userId) {
+    public static AddTaskFragment newInstance(long userId) {
         Bundle args = new Bundle();
-        args.putInt(Const.ADD_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
+        args.putLong(Const.ADD_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
         AddTaskFragment fragment = new AddTaskFragment();
         fragment.setArguments(args);
         return fragment;
@@ -71,7 +72,7 @@ public class AddTaskFragment extends Fragment  {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null ){
-            userId = bundle.getInt(Const.ADD_FRAGMENT_USER_ID_BUNDLE_KEY , 0);
+            userId = bundle.getLong(Const.ADD_FRAGMENT_USER_ID_BUNDLE_KEY , 0);
         }
     }
 
@@ -189,7 +190,7 @@ public class AddTaskFragment extends Fragment  {
 
                 if (!title.isEmpty() && !description.isEmpty() && !time.isEmpty() && !date.isEmpty() &&
                         !status.isEmpty()){
-                    isInsert = repository.insertTask(userId , title , description , status , date , time);
+                    isInsert = repository.insertTask(setTaskModel(userId , title , description , status , date , time));
                 }else {
                     Toast.makeText(getActivity() , "Please Fill the fields" , Toast.LENGTH_SHORT).show();
                 }
@@ -203,6 +204,17 @@ public class AddTaskFragment extends Fragment  {
         });
 
 
+    }
+
+    private TaskModel setTaskModel(long userId, String title, String description, String status, String date, String time) {
+        TaskModel taskModel = new TaskModel();
+        taskModel.setUserId(userId);
+        taskModel.setTitle(title);
+        taskModel.setDescription(description);
+        taskModel.setStatus(status);
+        taskModel.setDate(date);
+        taskModel.setTime(time);
+        return taskModel;
     }
 
     private void initViews(View v) {

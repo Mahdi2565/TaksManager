@@ -9,11 +9,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.util.ArrayList;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.model.UserModel;
-import ir.mahdidev.taksmanager.util.TaskRepository;
+import ir.mahdidev.taksmanager.model.TaskRepository;
 
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> {
@@ -45,11 +47,15 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         private TextView userUsername;
         private TextView userDate ;
         private TextView countUser;
+        public MaterialCardView viewBackground ;
+        public MaterialCardView viewForeground ;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userUsername = itemView.findViewById(R.id.user_username);
             userDate     = itemView.findViewById(R.id.date_user);
             countUser    = itemView.findViewById(R.id.task_count);
+            viewBackground = itemView.findViewById(R.id.view_background);
+            viewForeground = itemView.findViewById(R.id.view_foreground);
         }
 
         public void onBind(int position) {
@@ -57,5 +63,14 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             userDate.setText(userList.get(position).getRegisterDate());
             countUser.setText(String.valueOf(repository.getProfilesCount(position+1)));
         }
+    }
+    public void removeItem(int position) {
+        userList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(UserModel userModel, int position) {
+        userList.add(position, userModel);
+        notifyItemInserted(position);
     }
 }
