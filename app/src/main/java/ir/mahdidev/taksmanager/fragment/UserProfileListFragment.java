@@ -100,7 +100,7 @@ public class UserProfileListFragment extends Fragment implements RecyclerItemTou
             userRecyclerViewAdapter.removeItem(viewHolder.getAdapterPosition());
             repository.deleteUser(deletedItem.getId()) ;
             if (deletedItem.getId() == userId){
-                logoutFunction(deletedItem);
+                logoutFunction();
             }
             Snackbar snackbar = Snackbar
                     .make(getActivity().findViewById(android.R.id.content), name + " removed from user!", Snackbar.LENGTH_LONG);
@@ -117,8 +117,7 @@ public class UserProfileListFragment extends Fragment implements RecyclerItemTou
     }
 
 
-    private void logoutFunction(UserModel userModel) {
-        repository.updateLoggedIn(userModel.getUserName() , 0);
+    private void logoutFunction() {
         Intent intent = MainActivity.newIntent(getActivity());
         startActivity(intent);
         getActivity().finish();
