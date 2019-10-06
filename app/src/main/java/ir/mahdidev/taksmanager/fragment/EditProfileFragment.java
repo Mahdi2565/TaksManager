@@ -34,6 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ir.mahdidev.taksmanager.R;
+import ir.mahdidev.taksmanager.activity.MainActivity;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.model.TaskRepository;
@@ -153,6 +154,9 @@ public class EditProfileFragment extends Fragment {
                     if (getFragmentManager() != null) {
                         getFragmentManager().popBackStack();
                     }
+                    Intent intent = new Intent(getActivity() , MainActivity.class);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

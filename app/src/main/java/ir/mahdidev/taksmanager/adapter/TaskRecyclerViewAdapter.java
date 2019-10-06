@@ -1,6 +1,7 @@
 package ir.mahdidev.taksmanager.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.model.TaskModel;
+import ir.mahdidev.taksmanager.model.TaskRepository;
+import ir.mahdidev.taksmanager.model.UserModel;
 
 public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
 
@@ -51,6 +54,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             firstCharacterTitle = itemView.findViewById(R.id.first_character_title);
         }
         public void onBind(final int position){
+          //  UserModel userModel = TaskRepository.getInstance().readUserProfile(taskList.get(position).getUserId());
             String time = taskList.get(position).getDate() + " " + taskList.get(position).getTime();
             titleTask.setText(taskList.get(position).getTitle());
             dateTask.setText(time);

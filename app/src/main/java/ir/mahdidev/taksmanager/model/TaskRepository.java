@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import org.greenrobot.greendao.query.DeleteQuery;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -276,6 +278,7 @@ public class TaskRepository {
         contentValues.put(Const.DB.TABLE_TASK_TIME , taskModel.getTime());
        isInsert =  G.DB.insert(Const.DB.DB_TABLE_TASK , null , contentValues) > 0;
 */
+
         try {
             taskModelDao.insert(taskModel);
             return true;
@@ -307,11 +310,12 @@ public class TaskRepository {
          */
     }
     public boolean deleteTask (long taskId , long userId){
-        TaskModel oldTaskModel = taskModelDao.queryBuilder().where(TaskModelDao.Properties.Id.eq(taskId) ,
+       TaskModel taskModel = taskModelDao.queryBuilder().where(TaskModelDao.Properties.Id.eq(taskId) ,
                 TaskModelDao.Properties.UserId.eq(userId))
                 .unique();
+
         try {
-            taskModelDao.delete(oldTaskModel);
+            taskModelDao.delete(taskModel);
             return true;
         }catch (Exception e){
             return false;
@@ -326,11 +330,14 @@ public class TaskRepository {
     }
 
     public boolean deleteTask (long userId){
-        TaskModel oldTaskModel = taskModelDao.queryBuilder()
-                .where(TaskModelDao.Properties.UserId.eq(userId))
-                .unique();
+
         try {
-            taskModelDao.delete(oldTaskModel);
+         DeleteQuery<TaskModel> deleteQuery = taskModelDao.queryBuilder()
+                    .where(TaskModelDao.Properties.UserId.eq(userId))
+                    .buildDelete();
+            deleteQuery.executeDeleteWithoutDetachingEntities();
+            daoSession.clear();
+
             return true;
         }catch (Exception e){
             return false;
@@ -449,12 +456,14 @@ public class TaskRepository {
         UserModel oldUserModel = userModelDao.queryBuilder()
                 .where(UserModelDao.Properties.Id.eq(userId))
                 .unique();
-        TaskModel oldTaskModel = taskModelDao.queryBuilder()
-                .where(TaskModelDao.Properties.UserId.eq(userId))
-                .unique();
+
         try {
             userModelDao.delete(oldUserModel);
-            taskModelDao.delete(oldTaskModel);
+          DeleteQuery<TaskModel> deleteQuery = taskModelDao.queryBuilder()
+                    .where(TaskModelDao.Properties.UserId.eq(userId))
+                    .buildDelete();
+            deleteQuery.executeDeleteWithoutDetachingEntities();
+            daoSession.clear();
             return true;
         }catch (Exception e) {
             return false;

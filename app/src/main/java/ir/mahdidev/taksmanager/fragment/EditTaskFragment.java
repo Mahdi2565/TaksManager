@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -30,6 +31,7 @@ import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.model.TaskRepository;
+import ir.mahdidev.taksmanager.util.G;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,10 +50,11 @@ public class EditTaskFragment extends Fragment {
     private Chip doingChip;
     private Chip doneChip;
     private String status ;
+    private ImageView shareTask ;
     private TaskRepository repository = TaskRepository.getInstance();
     private TaskModel taskModel;
-    private long userId ;
-    private long taskId;
+    private Long userId ;
+    private Long taskId;
     private boolean isAdmin ;
     private Date dateReceive ;
     private Date timeReceive ;
@@ -107,6 +110,28 @@ public class EditTaskFragment extends Fragment {
         setReceiveDate();
         saveBtnFunction();
         deleteBtnFunction();
+        shareTaskImgFunction();
+    }
+
+    private void shareTaskImgFunction() {
+        shareTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String message = "Title: " + taskModel.getTitle() + "\n" +
+                        "Description: " + taskModel.getDescription() + "\n" +
+                        "Date: " + taskModel.getDate() + "\n" +
+                        "Time: " + taskModel.getTime() + "\n" +
+                        "Status: " + taskModel.getStatus() ;
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT , message);
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+                    intent = Intent.createChooser(intent , "Send via");
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void deleteBtnFunction() {
@@ -174,7 +199,7 @@ public class EditTaskFragment extends Fragment {
 
                 if (!title.isEmpty() && !description.isEmpty() && !time.isEmpty() && !date.isEmpty() &&
                         !status.isEmpty()){
-                        isUpdate = repository.updateTask(setTaskModel(taskId  , title , description , status , date , time));
+                        isUpdate = repository.updateTask(setTaskModel(userId, taskId  , title , description , status , date , time));
                 }else {
                     Toast.makeText(getActivity() , "Please Fill the fields" , Toast.LENGTH_SHORT).show();
                 }
@@ -259,6 +284,7 @@ public class EditTaskFragment extends Fragment {
         todoChip.setEnabled(true);
         doingChip.setEnabled(true);
         doneChip.setEnabled(true);
+        editBtn.setVisibility(View.GONE);
     }
 
     private void setDataToViews() {
@@ -297,6 +323,8 @@ public class EditTaskFragment extends Fragment {
         todoChip = v.findViewById(R.id.todo_chips);
         doingChip = v.findViewById(R.id.doing_chips);
         doneChip = v.findViewById(R.id.done_chips);
+        shareTask = v.findViewById(R.id.share_task_img);
+
     }
 
     @Override
@@ -315,9 +343,10 @@ public class EditTaskFragment extends Fragment {
             editFragmentInterface.onEditTaskClicked();
         }
     }
-    private TaskModel setTaskModel(long taskId, String title, String description, String status, String date, String time) {
+    private TaskModel setTaskModel(Long userId , Long taskId, String title, String description, String status, String date, String time) {
         TaskModel taskModel = new TaskModel();
         taskModel.setId(taskId);
+        taskModel.setUserId(userId);
         taskModel.setTitle(title);
         taskModel.setDescription(description);
         taskModel.setStatus(status);

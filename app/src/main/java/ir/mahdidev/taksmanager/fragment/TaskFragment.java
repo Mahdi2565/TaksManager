@@ -137,7 +137,6 @@ public class TaskFragment extends Fragment {
         recyclerViewAdapter.setTaskRecyclerViewInterface(new TaskRecyclerViewAdapter.TaskRecyclerViewInterface() {
             @Override
             public void onReceive(long taskId , long UserId) {
-                Log.e("TAG4" , "user " + UserId + " task " + taskId);
 
                 TaskDialogFragment dialogFragment = TaskDialogFragment.newInstance(Const.EDIT_TASK_MODE , taskId , UserId , isAdmin);
                 dialogFragment.setTargetFragment(TaskFragment.this , Const.TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT);
