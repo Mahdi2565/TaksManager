@@ -108,24 +108,34 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/save_btn"
                 android:text="@string/save_btn"
-                android:layout_marginEnd="32dp"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/chip_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="32dp" />
+                android:layout_alignParentRight="true" />
 
-            <com.google.android.material.button.MaterialButton
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_toLeftOf="@id/save_btn"
+            android:layout_toRightOf="@id/cancel_btn"
+            android:layout_below="@id/chip_group"
+            android:id="@+id/choose_image_btn"
+            android:text="@string/choose_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+
+        <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel_btn"
                 android:text="@string/cancel_btn"
-                android:layout_marginStart="32dp"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/chip_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="32dp" />
+                android:layout_alignParentLeft="true"/>
 
         </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>

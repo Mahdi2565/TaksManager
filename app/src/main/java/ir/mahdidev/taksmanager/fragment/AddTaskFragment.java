@@ -41,9 +41,10 @@ public class AddTaskFragment extends Fragment  {
     private MaterialButton timeBtn ;
     private MaterialButton saveBtn ;
     private MaterialButton cancelBtn ;
+    private MaterialButton chooseImage;
     private ChipGroup chipGroup;
     private String status = "";
-    private long userId ;
+    private Long userId ;
     private AddFragmentInterface addFragmentInterface;
     private Date dateReceive = null;
     private Date timeReceive = null;
@@ -91,10 +92,27 @@ public class AddTaskFragment extends Fragment  {
         dateBtnFunction();
         timeBtnFunction();
         insertDataToDb();
+        cancelBtnFunction();
+        chooseImageFunction();
+    }
+
+    private void cancelBtnFunction() {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addFragmentInterface.onCancelAddTaskClicked();
+            }
+        });
+    }
+
+    private void chooseImageFunction() {
+        chooseImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout
+                        , new ChooseTaskImageFragment())
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }
@@ -225,6 +243,7 @@ public class AddTaskFragment extends Fragment  {
         saveBtn = v.findViewById(R.id.save_btn);
         cancelBtn = v.findViewById(R.id.cancel_btn);
         chipGroup = v.findViewById(R.id.chip_group);
+        chooseImage = v.findViewById(R.id.choose_image_btn);
     }
 
     public interface AddFragmentInterface{

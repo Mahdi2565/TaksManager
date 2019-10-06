@@ -27,4 +27,7 @@
     <string name="delete_all_task">Do you want delete all tasks ?</string>
     <string name="no_permision_image_user">There is No Permission ! Access Denied</string>
     <string name="update_user_btn">Update User</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
 </resources>
