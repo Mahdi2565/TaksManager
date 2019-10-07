@@ -30,4 +30,5 @@
     <string name="choose_image">Choose Image</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
+    <string name="select_image">Select a image</string>
 </resources>

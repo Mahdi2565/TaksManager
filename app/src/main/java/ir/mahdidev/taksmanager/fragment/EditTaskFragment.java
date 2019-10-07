@@ -40,35 +40,37 @@ public class EditTaskFragment extends Fragment {
 
     private TextInputEditText titleEdt;
     private TextInputEditText descriptionEdt;
-    private MaterialButton dateBtn ;
-    private MaterialButton timeBtn ;
-    private MaterialButton saveBtn ;
+    private MaterialButton dateBtn;
+    private MaterialButton timeBtn;
+    private MaterialButton saveBtn;
     private MaterialButton deleteBtn;
-    private MaterialButton editBtn ;
+    private MaterialButton editBtn;
     private ChipGroup chipGroup;
     private Chip todoChip;
     private Chip doingChip;
     private Chip doneChip;
-    private String status ;
-    private ImageView shareTask ;
+    private String status;
+    private ImageView shareTask;
+    private ImageView chooseImage;
     private TaskRepository repository = TaskRepository.getInstance();
     private TaskModel taskModel;
-    private Long userId ;
+    private Long userId;
     private Long taskId;
-    private boolean isAdmin ;
-    private Date dateReceive ;
-    private Date timeReceive ;
-    private boolean isEditable = false ;
+    private boolean isAdmin;
+    private Date dateReceive;
+    private Date timeReceive;
+    private boolean isEditable = false;
+    private String imagePath;
 
     public EditTaskFragment() {
     }
 
-    public static EditTaskFragment newInstance(long taskId , long userId , boolean isAdmin) {
+    public static EditTaskFragment newInstance(long taskId, long userId, boolean isAdmin) {
 
         Bundle args = new Bundle();
-        args.putLong(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY , taskId);
-        args.putLong(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY , userId);
-        args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY , isAdmin);
+        args.putLong(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY, taskId);
+        args.putLong(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY, userId);
+        args.putBoolean(Const.IS_ADMIN_BUNDLE_KEY, isAdmin);
         EditTaskFragment fragment = new EditTaskFragment();
         fragment.setArguments(args);
         return fragment;
@@ -84,7 +86,7 @@ public class EditTaskFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        if (bundle != null){
+        if (bundle != null) {
             userId = bundle.getLong(Const.EDIT_FRAGMENT_USER_ID_BUNDLE_KEY);
             taskId = bundle.getLong(Const.EDIT_FRAGMENT_TASK_ID_BUNDLE_KEY);
             isAdmin = bundle.getBoolean(Const.IS_ADMIN_BUNDLE_KEY);
@@ -111,6 +113,23 @@ public class EditTaskFragment extends Fragment {
         saveBtnFunction();
         deleteBtnFunction();
         shareTaskImgFunction();
+        chooseImageFunction();
+    }
+
+    private void chooseImageFunction() {
+
+        chooseImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChooseTaskImageFragment chooseTaskImageFragment =
+                        ChooseTaskImageFragment.newInstance(taskModel.getUuid());
+                chooseTaskImageFragment.setTargetFragment(EditTaskFragment.this,
+                        Const.TARGET_REQUSET_CODE_CCHOOSE_IMAGE_FRAGMENT);
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout, chooseTaskImageFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     private void shareTaskImgFunction() {
@@ -122,12 +141,12 @@ public class EditTaskFragment extends Fragment {
                         "Description: " + taskModel.getDescription() + "\n" +
                         "Date: " + taskModel.getDate() + "\n" +
                         "Time: " + taskModel.getTime() + "\n" +
-                        "Status: " + taskModel.getStatus() ;
+                        "Status: " + taskModel.getStatus();
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT , message);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null){
-                    intent = Intent.createChooser(intent , "Send via");
+                intent.putExtra(Intent.EXTRA_TEXT, message);
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    intent = Intent.createChooser(intent, "Send via");
                     startActivity(intent);
                 }
             }
@@ -138,9 +157,9 @@ public class EditTaskFragment extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DeleteFragment deleteFragment = DeleteFragment.newInstance(taskId , userId);
-                deleteFragment.setTargetFragment(EditTaskFragment.this , Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT);
-                getFragmentManager().beginTransaction().replace(R.id.frame_layout , deleteFragment)
+                DeleteFragment deleteFragment = DeleteFragment.newInstance(taskId, userId);
+                deleteFragment.setTargetFragment(EditTaskFragment.this, Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT);
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout, deleteFragment)
                         .addToBackStack(null)
                         .commit();
             }
@@ -150,16 +169,16 @@ public class EditTaskFragment extends Fragment {
     private void saveBtnFunction() {
         status = "";
 
-        switch (chipGroup.getCheckedChipId()){
-            case R.id.todo_chips :{
+        switch (chipGroup.getCheckedChipId()) {
+            case R.id.todo_chips: {
                 status = getResources().getString(R.string.todo_chips);
                 break;
             }
-            case R.id.doing_chips : {
+            case R.id.doing_chips: {
                 status = getResources().getString(R.string.doing_chips);
                 break;
             }
-            case R.id.done_chips : {
+            case R.id.done_chips: {
                 status = getResources().getString(R.string.done_chips);
                 break;
             }
@@ -168,21 +187,21 @@ public class EditTaskFragment extends Fragment {
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup chipGroup, int i) {
-                switch (chipGroup.getCheckedChipId()){
-                    case R.id.todo_chips :{
+                switch (chipGroup.getCheckedChipId()) {
+                    case R.id.todo_chips: {
                         status = getResources().getString(R.string.todo_chips);
                         break;
                     }
-                    case R.id.doing_chips : {
+                    case R.id.doing_chips: {
                         status = getResources().getString(R.string.doing_chips);
                         break;
                     }
-                    case R.id.done_chips :{
+                    case R.id.done_chips: {
                         status = getResources().getString(R.string.done_chips);
                         break;
                     }
                 }
-                if (chipGroup.getCheckedChipId() == -1){
+                if (chipGroup.getCheckedChipId() == -1) {
                     status = "";
                 }
             }
@@ -195,17 +214,17 @@ public class EditTaskFragment extends Fragment {
                 String description = descriptionEdt.getText().toString().trim();
                 String time = timeBtn.getText().toString();
                 String date = dateBtn.getText().toString();
-                boolean isUpdate = false ;
+                boolean isUpdate = false;
 
                 if (!title.isEmpty() && !description.isEmpty() && !time.isEmpty() && !date.isEmpty() &&
-                        !status.isEmpty()){
-                        isUpdate = repository.updateTask(setTaskModel(userId, taskId  , title , description , status , date , time));
-                }else {
-                    Toast.makeText(getActivity() , "Please Fill the fields" , Toast.LENGTH_SHORT).show();
+                        !status.isEmpty()) {
+                    isUpdate = repository.updateTask(setTaskModel(userId, taskId, title, description, status, date, time));
+                } else {
+                    Toast.makeText(getActivity(), "Please Fill the fields", Toast.LENGTH_SHORT).show();
                 }
 
-                if (isUpdate){
-                    Toast.makeText(getActivity() , "Task Update Successfully" , Toast.LENGTH_SHORT).show();
+                if (isUpdate) {
+                    Toast.makeText(getActivity(), "Task Update Successfully", Toast.LENGTH_SHORT).show();
                     editFragmentInterface.onEditTaskClicked();
                 }
 
@@ -216,8 +235,8 @@ public class EditTaskFragment extends Fragment {
     }
 
     private void setReceiveDate() {
-        if (dateReceive != null){
-            DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy" , Locale.US);
+        if (dateReceive != null) {
+            DateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy", Locale.US);
             String dateFormatted = dateFormat.format(dateReceive);
             dateBtn.setText(dateFormatted);
         }
@@ -229,8 +248,8 @@ public class EditTaskFragment extends Fragment {
             public void onClick(View view) {
 
                 DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(taskModel.getDate());
-                datePickerFragment.setTargetFragment(EditTaskFragment.this , Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT);
-                getFragmentManager().beginTransaction().replace(R.id.frame_layout , datePickerFragment)
+                datePickerFragment.setTargetFragment(EditTaskFragment.this, Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT);
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout, datePickerFragment)
                         .addToBackStack(null)
                         .commit();
             }
@@ -239,8 +258,8 @@ public class EditTaskFragment extends Fragment {
 
     private void setReceiveTime() {
 
-        if (timeReceive != null){
-            DateFormat timeFormat = new SimpleDateFormat("hh:mm a" , Locale.US);
+        if (timeReceive != null) {
+            DateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
             String timeFormatted = timeFormat.format(timeReceive);
             timeBtn.setText(timeFormatted);
         }
@@ -254,8 +273,8 @@ public class EditTaskFragment extends Fragment {
             public void onClick(View view) {
 
                 TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(taskModel.getTime());
-                timePickerFragment.setTargetFragment(EditTaskFragment.this , Const.TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT);
-                getFragmentManager().beginTransaction().replace(R.id.frame_layout , timePickerFragment)
+                timePickerFragment.setTargetFragment(EditTaskFragment.this, Const.TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT);
+                getFragmentManager().beginTransaction().replace(R.id.frame_layout, timePickerFragment)
                         .addToBackStack(null)
                         .commit();
 
@@ -292,21 +311,21 @@ public class EditTaskFragment extends Fragment {
         descriptionEdt.setText(taskModel.getDescription());
         dateBtn.setText(taskModel.getDate());
         timeBtn.setText(taskModel.getTime());
-        if (taskModel.getStatus().equals(getResources().getString(R.string.todo_chips))){
+        if (taskModel.getStatus().equals(getResources().getString(R.string.todo_chips))) {
             todoChip.setChecked(true);
-        } else if (taskModel.getStatus().equals(getResources().getString(R.string.doing_chips))){
+        } else if (taskModel.getStatus().equals(getResources().getString(R.string.doing_chips))) {
             doingChip.setChecked(true);
-        }else if (taskModel.getStatus().equals(getResources().getString(R.string.done_chips))){
+        } else if (taskModel.getStatus().equals(getResources().getString(R.string.done_chips))) {
             doneChip.setChecked(true);
         }
 
     }
 
     private void readTaskFromDb() {
-        if (isAdmin){
+        if (isAdmin) {
             taskModel = repository.readTask(taskId);
-        }else {
-            taskModel = repository.readTask(userId , taskId);
+        } else {
+            taskModel = repository.readTask(userId, taskId);
         }
     }
 
@@ -318,32 +337,39 @@ public class EditTaskFragment extends Fragment {
         timeBtn = v.findViewById(R.id.time_btn);
         saveBtn = v.findViewById(R.id.save_btn);
         deleteBtn = v.findViewById(R.id.delete_btn);
-        editBtn   = v.findViewById(R.id.edit_btn);
+        editBtn = v.findViewById(R.id.edit_btn);
         chipGroup = v.findViewById(R.id.chip_group);
         todoChip = v.findViewById(R.id.todo_chips);
         doingChip = v.findViewById(R.id.doing_chips);
         doneChip = v.findViewById(R.id.done_chips);
         shareTask = v.findViewById(R.id.share_task_img);
+        chooseImage = v.findViewById(R.id.choose_image_img);
 
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (!(resultCode == Activity.RESULT_OK)){
+        if (!(resultCode == Activity.RESULT_OK)) {
             return;
         }
-        if (requestCode == Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT){
+        if (requestCode == Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT) {
             dateReceive = (Date) data.getSerializableExtra(Const.DATE_PICKER_FRAGMENT_BUNDLE_KEY);
             isEditable = true;
-        }else if (requestCode == Const.TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT){
-            timeReceive = (Date) data.getSerializableExtra(Const.TIME_PICKER_FRAGMENT_BUNDLE_KEY) ;
+        } else if (requestCode == Const.TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT) {
+            timeReceive = (Date) data.getSerializableExtra(Const.TIME_PICKER_FRAGMENT_BUNDLE_KEY);
             isEditable = true;
-        }else if (requestCode == Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT){
+        } else if (requestCode == Const.TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT) {
             editFragmentInterface.onEditTaskClicked();
+        } else if (requestCode == Const.TARGET_REQUSET_CODE_CCHOOSE_IMAGE_FRAGMENT) {
+            imagePath = data.getStringExtra(Const.CHOOSE_IMAGE_FRAGMENT_IMAGE_PATH_INTENT_KEY);
+            repository.updateTask(setTaskModel(userId, taskId, titleEdt.getText().toString()
+                    , descriptionEdt.getText().toString(), status, dateBtn.getText().toString()
+                    , timeBtn.getText().toString()));
         }
     }
-    private TaskModel setTaskModel(Long userId , Long taskId, String title, String description, String status, String date, String time) {
+
+    private TaskModel setTaskModel(Long userId, Long taskId, String title, String description, String status, String date, String time) {
         TaskModel taskModel = new TaskModel();
         taskModel.setId(taskId);
         taskModel.setUserId(userId);
@@ -352,16 +378,20 @@ public class EditTaskFragment extends Fragment {
         taskModel.setStatus(status);
         taskModel.setDate(date);
         taskModel.setTime(time);
+        taskModel.setUuid(this.taskModel.getUuid());
+        if (imagePath !=null) taskModel.setImagePath(imagePath);
         return taskModel;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (isEditable)enableViews();
+        if (isEditable) enableViews();
     }
+
     public EditFragmentInterface editFragmentInterface;
-    public interface EditFragmentInterface{
+
+    public interface EditFragmentInterface {
         void onEditTaskClicked();
     }
 }

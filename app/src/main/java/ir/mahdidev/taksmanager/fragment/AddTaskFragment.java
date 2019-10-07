@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.model.TaskModel;
@@ -45,6 +47,8 @@ public class AddTaskFragment extends Fragment  {
     private ChipGroup chipGroup;
     private String status = "";
     private Long userId ;
+    private UUID uuid;
+    private String imagePath;
     private AddFragmentInterface addFragmentInterface;
     private Date dateReceive = null;
     private Date timeReceive = null;
@@ -71,6 +75,7 @@ public class AddTaskFragment extends Fragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uuid = UUID.randomUUID();
         Bundle bundle = getArguments();
         if (bundle != null ){
             userId = bundle.getLong(Const.ADD_FRAGMENT_USER_ID_BUNDLE_KEY , 0);
@@ -109,8 +114,11 @@ public class AddTaskFragment extends Fragment  {
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ChooseTaskImageFragment chooseTaskImageFragment = ChooseTaskImageFragment.newInstance(uuid);
+                chooseTaskImageFragment.setTargetFragment(AddTaskFragment.this ,
+                        Const.TARGET_REQUSET_CODE_CCHOOSE_IMAGE_FRAGMENT);
                 getFragmentManager().beginTransaction().replace(R.id.frame_layout
-                        , new ChooseTaskImageFragment())
+                        , chooseTaskImageFragment)
                         .addToBackStack(null)
                         .commit();
             }
@@ -232,6 +240,8 @@ public class AddTaskFragment extends Fragment  {
         taskModel.setStatus(status);
         taskModel.setDate(date);
         taskModel.setTime(time);
+        taskModel.setUuid(uuid);
+        if (imagePath !=null) taskModel.setImagePath(imagePath);
         return taskModel;
     }
 
@@ -259,8 +269,10 @@ public class AddTaskFragment extends Fragment  {
         }
         if (requestCode == Const.TARGET_REQUSET_CODE_DATE_PICKER_FRAGMENT){
             dateReceive = (Date) data.getSerializableExtra(Const.DATE_PICKER_FRAGMENT_BUNDLE_KEY);
-        }else {
+        }else if (requestCode == Const.TARGET_REQUSET_CODE_TIME_PICKER_FRAGMENT){
             timeReceive = (Date) data.getSerializableExtra(Const.TIME_PICKER_FRAGMENT_BUNDLE_KEY) ;
+        }else if (requestCode == Const.TARGET_REQUSET_CODE_CCHOOSE_IMAGE_FRAGMENT){
+            imagePath = data.getStringExtra(Const.CHOOSE_IMAGE_FRAGMENT_IMAGE_PATH_INTENT_KEY);
         }
     }
 }

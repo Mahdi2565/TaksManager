@@ -1,11 +1,15 @@
 package ir.mahdidev.taksmanager.model;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.ToOne;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
+
+import java.util.UUID;
 
 @Entity
 public class TaskModel {
@@ -25,16 +29,20 @@ public class TaskModel {
     private String time;
     @ToOne(joinProperty = "userId")
     private UserModel userModel;
+    @Convert(converter = UUIDConverter.class, columnType = String.class)
+    private UUID uuid;
+    private String imagePath;
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
     /** Used for active entity operations. */
     @Generated(hash = 2101842271)
     private transient TaskModelDao myDao;
-    @Generated(hash = 57123137)
+    @Generated(hash = 497095475)
     public TaskModel(Long id, @NotNull Long userId, @NotNull String title,
             @NotNull String description, @NotNull String status,
-            @NotNull String date, @NotNull String time) {
+            @NotNull String date, @NotNull String time, UUID uuid,
+            String imagePath) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -42,6 +50,8 @@ public class TaskModel {
         this.status = status;
         this.date = date;
         this.time = time;
+        this.uuid = uuid;
+        this.imagePath = imagePath;
     }
     @Generated(hash = 648620828)
     public TaskModel() {
@@ -87,6 +97,18 @@ public class TaskModel {
     }
     public void setTime(String time) {
         this.time = time;
+    }
+    public UUID getUuid() {
+        return this.uuid;
+    }
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+    public String getImagePath() {
+        return this.imagePath;
+    }
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
     @Generated(hash = 2141663969)
     private transient Long userModel__resolvedKey;
@@ -161,6 +183,4 @@ public class TaskModel {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getTaskModelDao() : null;
     }
-    
-
 }

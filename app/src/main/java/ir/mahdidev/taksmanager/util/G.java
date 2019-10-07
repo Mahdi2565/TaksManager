@@ -1,6 +1,7 @@
 package ir.mahdidev.taksmanager.util;
 
 import android.app.Application;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import ir.mahdidev.taksmanager.model.DaoMaster;
@@ -13,6 +14,7 @@ public class G extends Application {
     public static SQLiteDatabase DB ;
     public static G mInstance;
     private   DaoSession daoSession;
+    private  Context context;
 
     @Override
     public void onCreate() {
@@ -20,6 +22,7 @@ public class G extends Application {
         createGreenDaoDb();
         createDB();
         mInstance = this;
+        context = this;
     }
 
     private void createGreenDaoDb() {
@@ -34,6 +37,11 @@ public class G extends Application {
     public static synchronized G getInstance() {
         return mInstance;
     }
+
+    public  Context getContext() {
+        return context;
+    }
+
     private void createDB(){
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
         DB = databaseHelper.getWritableDatabase();

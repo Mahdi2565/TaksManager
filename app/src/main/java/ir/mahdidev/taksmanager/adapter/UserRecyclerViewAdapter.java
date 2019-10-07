@@ -22,11 +22,11 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
     ArrayList<UserModel> userList ;
     Context context ;
-    private TaskRepository repository = TaskRepository.getInstance();
     public UserRecyclerViewAdapter(ArrayList<UserModel> userList, Context context) {
         this.userList = userList;
         this.context = context;
     }
+    private TaskRepository repository = TaskRepository.getInstance();
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

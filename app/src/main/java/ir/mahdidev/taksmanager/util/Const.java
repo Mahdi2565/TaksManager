@@ -78,6 +78,8 @@ public class Const {
     public static final String  DELETE_FRAGMENT_TASK_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.delete.fragment.taskid.bundle.key";
     public static final String  DELETE_FRAGMENT_USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.delete.fragment.userid.bundle.key";
     public static final String  DELETE_ALL_TASK_FRAGMENT_USER_ID_BUNDLE_KEY = "ir.mahdidev.taksmanager.delete.all.task.fragment.userid.bundle.key";
+    public static final String  CHOOSE_IMAGE_FRAGMENT_UUID_BUNDLE_KEY = "ir.mahdidev.taksmanager.choose.image.uuid";
+    public static final String  CHOOSE_IMAGE_FRAGMENT_IMAGE_PATH_INTENT_KEY = "ir.mahdidev.taksmanager.choose.image.image.path";
     public static final int     Add_TASK_MODE = 1;
     public static final int     EDIT_TASK_MODE = 0;
     public static final int     DELETE_TASK_MODE = 2;
@@ -88,6 +90,7 @@ public class Const {
     public static final int     TARGET_REQUSET_CODE_EDIT_FRAGMENT_FRAGMENT = 350;
     public static final int     TARGET_REQUSET_CODE_DELETE_FRAGMENT_FRAGMENT = 450;
     public static final int     TARGET_REQUSET_CODE_MAIN_FRAGMENT = 550;
+    public static final int     TARGET_REQUSET_CODE_CCHOOSE_IMAGE_FRAGMENT = 850;
     public static final int     READ_INTERNAL_STORAGE_PERMISION= 650;
     public static final int     GET_IMAGE_REQUEST_CODE = 750;
 

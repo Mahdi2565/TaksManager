@@ -54,7 +54,6 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             firstCharacterTitle = itemView.findViewById(R.id.first_character_title);
         }
         public void onBind(final int position){
-          //  UserModel userModel = TaskRepository.getInstance().readUserProfile(taskList.get(position).getUserId());
             String time = taskList.get(position).getDate() + " " + taskList.get(position).getTime();
             titleTask.setText(taskList.get(position).getTitle());
             dateTask.setText(time);
@@ -65,6 +64,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
                     taskRecyclerViewInterface.onReceive(taskList.get(position).getId() , taskList.get(position).getUserId());
                 }
             });
+
         }
     }
     public TaskRecyclerViewInterface taskRecyclerViewInterface;

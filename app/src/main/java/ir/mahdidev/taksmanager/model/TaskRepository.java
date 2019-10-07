@@ -1,6 +1,7 @@
 package ir.mahdidev.taksmanager.model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -8,8 +9,10 @@ import android.util.Log;
 import org.greenrobot.greendao.query.DeleteQuery;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.G;
@@ -23,7 +26,6 @@ public class TaskRepository {
     private   UserModelDao userModelDao ;
 
     public static TaskRepository getInstance(){
-
         if (taskRepository==null){
             taskRepository = new TaskRepository();
         }
@@ -161,6 +163,8 @@ public class TaskRepository {
         userModel.setRegisterDate(cursor.getString(cursor.getColumnIndex(Const.DB.TABLE_USER_REGISTER_DATE)));
     }
 
+
+
     public ArrayList<TaskModel> readTask (String status , long userId){
 
         /*
@@ -210,6 +214,11 @@ public class TaskRepository {
          */
         return (ArrayList<TaskModel>) taskModelDao.queryBuilder()
                 .where(TaskModelDao.Properties.Status.eq(status)).list() ;
+    }
+
+    public TaskModel readTask (UUID uuid){
+        return taskModelDao.queryBuilder()
+                .where(TaskModelDao.Properties.Uuid.eq(uuid)).unique() ;
     }
 
     public TaskModel readTask ( long userId ,long taskId){
@@ -478,6 +487,10 @@ public class TaskRepository {
         return false;
 
          */
+    }
+
+    public File getImageFile(UUID uuid){
+        return new File(global.getContext().getFilesDir() , "IMG_" +uuid+".jpg");
     }
 
    /* public void insertTestData(){
