@@ -1,19 +1,34 @@
 package ir.mahdidev.taksmanager.activity;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputEditText;
+
+import org.greenrobot.eventbus.EventBus;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.fragment.EditProfileFragment;
@@ -22,6 +37,7 @@ import ir.mahdidev.taksmanager.fragment.UserProfileListFragment;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.ConnectivityReceiver;
 import ir.mahdidev.taksmanager.util.Const;
+import ir.mahdidev.taksmanager.util.EventBusSearchEvent;
 import ir.mahdidev.taksmanager.util.G;
 import ir.mahdidev.taksmanager.model.TaskRepository;
 
@@ -31,9 +47,9 @@ public class TaskActivity extends SingleFragmentActivity implements
     private Toolbar toolbar;
     private TextView titleToolbar;
     private TaskRepository repository = TaskRepository.getInstance();
-    private ImageView logOut;
     private UserModel userModel ;
-    private ImageView users_profile ;
+    private MaterialCardView searchCardView;
+    private TextInputEditText searchEdt;
 
 
     @Override
@@ -46,36 +62,35 @@ public class TaskActivity extends SingleFragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
-
-      //  SQLiteStudioService.instance().start(this);
         initViews();
-        setToolbarTitle();
         initToolbar();
         changeStatusBarColor();
+        searchFunction();
     }
-    private void initToolbar() {
-        setSupportActionBar(toolbar);
-        logOut.setOnClickListener(new View.OnClickListener() {
+
+    private void searchFunction() {
+        searchEdt.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                logoutFunction();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                EventBus.getDefault().post(new EventBusSearchEvent(charSequence.toString()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
-        if (userModel.getIsAdmin()==1){
-            users_profile.setVisibility(View.VISIBLE);
-            users_profile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UserProfileListFragment userProfileListFragment = UserProfileListFragment.newInstance(userModel.getId());
-                    if (getSupportFragmentManager().findFragmentByTag(Const.USER_PROFILE_LIST_TAG) != userProfileListFragment){
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout
-                                ,userProfileListFragment , Const.USER_PROFILE_LIST_TAG)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                }
-            });
-        }
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        String titleToolbarTxt = getResources().getString(R.string.title_toolbar)+ " " + userModel.getUserName();
+        titleToolbar.setText(titleToolbarTxt);
     }
 
     private void changeStatusBarColor() {
@@ -92,15 +107,9 @@ public class TaskActivity extends SingleFragmentActivity implements
     private void initViews() {
         toolbar      = findViewById(R.id.toolbar);
         titleToolbar = findViewById(R.id.title_toolbar);
-        logOut  = findViewById(R.id.log_out);
-        users_profile = findViewById(R.id.users_profile);
+        searchCardView = findViewById(R.id.search_cardview);
+        searchEdt = findViewById(R.id.search_edt);
     }
-
-    private void setToolbarTitle() {
-        String titleToolbarTxt = getResources().getString(R.string.title_toolbar)+ " " + userModel.getUserName();
-        titleToolbar.setText(titleToolbarTxt);
-    }
-
     public static Intent newIntent(Context context , UserModel userModel){
         Intent intent = new Intent(context , TaskActivity.class);
         intent.putExtra(Const.USER_MODEL_LOGGED_IN_INTENT_KEY , userModel);
@@ -138,9 +147,66 @@ public class TaskActivity extends SingleFragmentActivity implements
     }
 
     @Override
-    protected void onDestroy() {
-    //    SQLiteStudioService.instance().stop();
-        super.onDestroy();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search_btn).getActionView();
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            return true;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(userModel.getIsAdmin()==1) {
+            invalidateOptionsMenu();
+            menu.findItem(R.id.users_profile).setVisible(true);
+        }else menu.findItem(R.id.users_profile).setVisible(false);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.log_out : {
+                logoutFunction();
+                break;
+            }
+            case R.id.users_profile :{
+                UserProfileListFragment userProfileListFragment = UserProfileListFragment.newInstance(userModel.getId());
+                if (getSupportFragmentManager().findFragmentByTag(Const.USER_PROFILE_LIST_TAG) != userProfileListFragment){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout
+                            ,userProfileListFragment , Const.USER_PROFILE_LIST_TAG)
+                            .addToBackStack(null)
+                            .commit();
+                }
+                break;
+            }
+            case R.id.search_btn : {
+                Animation animation = AnimationUtils.loadAnimation(TaskActivity.this , android.R.anim.slide_in_left);
+                searchCardView.setVisibility(View.VISIBLE);
+                searchCardView.startAnimation(animation);
+                titleToolbar.setVisibility(View.GONE);
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (searchCardView.getVisibility()==View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(TaskActivity.this , android.R.anim.slide_out_right);
+            searchCardView.setVisibility(View.GONE);
+            searchCardView.startAnimation(animation);
+            searchEdt.setText("");
+            titleToolbar.setVisibility(View.VISIBLE);
+        } else
+            super.onBackPressed();
 
     }
 }

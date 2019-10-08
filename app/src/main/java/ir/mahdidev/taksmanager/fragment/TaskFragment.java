@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,7 @@ import ir.mahdidev.taksmanager.model.TaskModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.util.EventBusMessage;
 import ir.mahdidev.taksmanager.model.TaskRepository;
+import ir.mahdidev.taksmanager.util.EventBusSearchEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -173,5 +176,22 @@ public class TaskFragment extends Fragment {
         void onArriveBottom();
         void showFab();
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventBusSearchEvent searchEvent) {
+           recyclerViewAdapter.updateList(repository.searchFunction(searchEvent.searchMessage,
+                   status , isAdmin , userId));
+           recyclerViewAdapter.notifyDataSetChanged();
+    }
 }

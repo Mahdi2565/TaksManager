@@ -10,8 +10,6 @@ public class UserCursorWrapper extends CursorWrapper {
         super(cursor);
     }
 
-
-    
     public String checkUserExists(){
         return getString(getColumnIndex(Const.DB.TABLE_USER_USERNAME)) ;
     }

@@ -55,8 +55,8 @@ public class UserProfileListFragment extends Fragment implements RecyclerItemTou
         if (bundle != null){
             userId = bundle.getLong(Const.USER_PROFILE_LIST_BUNDLE_KEY);
         }
-    }
 
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,7 +79,6 @@ public class UserProfileListFragment extends Fragment implements RecyclerItemTou
         recyclerView.setAdapter(userRecyclerViewAdapter);
 
     }
-
     private void readDataFromDb() {
         userList = new ArrayList<>();
         userList = repository.readListUserProfile();

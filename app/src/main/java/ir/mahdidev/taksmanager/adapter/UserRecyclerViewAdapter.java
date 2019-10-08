@@ -61,7 +61,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         public void onBind(int position) {
             userUsername.setText(userList.get(position).getUserName());
             userDate.setText(userList.get(position).getRegisterDate());
-            countUser.setText(String.valueOf(repository.getProfilesCount(position+1)));
+            countUser.setText(String.valueOf(repository.getProfilesCount(userList.get(position).getId())));
         }
     }
     public void removeItem(int position) {

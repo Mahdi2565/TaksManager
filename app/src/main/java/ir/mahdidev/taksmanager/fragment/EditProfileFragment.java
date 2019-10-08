@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import ir.mahdidev.taksmanager.R;
 import ir.mahdidev.taksmanager.activity.MainActivity;
+import ir.mahdidev.taksmanager.activity.TaskActivity;
 import ir.mahdidev.taksmanager.model.UserModel;
 import ir.mahdidev.taksmanager.util.Const;
 import ir.mahdidev.taksmanager.model.TaskRepository;
@@ -154,9 +155,9 @@ public class EditProfileFragment extends Fragment {
                     if (getFragmentManager() != null) {
                         getFragmentManager().popBackStack();
                     }
-                    Intent intent = new Intent(getActivity() , MainActivity.class);
-                    startActivity(intent);
+                    Intent intent = MainActivity.newIntent(getActivity());
                     getActivity().finish();
+                    startActivity(intent);
                 }
             }
         });
@@ -255,6 +256,7 @@ public class EditProfileFragment extends Fragment {
         userModel.setEmail(email);
         userModel.setAge(age);
         userModel.setRegisterDate(registerDate);
+        userModel.setIsLoggedIn(1);
         return userModel ;
     }
 

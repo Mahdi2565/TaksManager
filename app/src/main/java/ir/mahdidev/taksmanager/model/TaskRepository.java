@@ -510,5 +510,18 @@ public class TaskRepository {
         }
     }
 */
-
+    public ArrayList<TaskModel> searchFunction(String searchText , String status , boolean isAdmin ,
+                                               long userId){
+        ArrayList<TaskModel> searchedList = (ArrayList<TaskModel>) taskModelDao.queryBuilder().whereOr(TaskModelDao.Properties.Title
+                        .like("%" + searchText + "%") ,
+                TaskModelDao.Properties.Description.like("%" + searchText + "%"))
+                .where(TaskModelDao.Properties.Status.eq(status))
+                .list();
+        if (searchText.equals("")){
+            if (isAdmin) return readTask(status);
+            else return readTask(status , userId);
+        }else {
+            return searchedList;
+        }
+    }
 }

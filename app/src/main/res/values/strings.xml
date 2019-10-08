@@ -31,4 +31,6 @@
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
     <string name="select_image">Select a image</string>
+    <string name="profile_list">Profile List</string>
+    <string name="search">Search</string>
 </resources>
